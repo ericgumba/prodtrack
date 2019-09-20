@@ -49,6 +49,23 @@ exports.update_task = ( req, res, next ) => {
     } )
 }
 
+exports.edit_task = ( req, res , next ) => {
+    User.findOne( { username: req.body.username }, (err, user) => {
+ 
+        
+        let entry = grabEntry(user.entries, req.body.entryTitle) 
+        let task = grabTask(entry.tasks, req.body.taskName)
+
+        console.log( { user, entry, task } )
+        task.name = req.body.newName
+
+        user.save((err, newUser) => {
+            res.send(newUser);
+        })
+        
+    } )
+}
+
 exports.user_create = ( req, res, next ) => {
  
     // create new user object~ 
