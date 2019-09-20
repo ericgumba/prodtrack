@@ -1,15 +1,12 @@
-  
+var Task = require('./task')
+
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
 var EntrySchema = new Schema({
-    title: {type: String, required: true },
-    tasks: [{ type: Schema.ObjectId, ref: 'Task' }],
-    minutesComplete: { type: Number, required: false },
-    hoursComplete: { type: Number, required: true },
-    pomodorosComplete: { type: Number, required: false },
-
+    title: {type: String, required: true, unique: true },
+    tasks: [Task.schema],  
 });
 
 // Virtual for this genre instance URL.

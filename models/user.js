@@ -1,13 +1,14 @@
 var mongoose = require('mongoose'); 
-
+var Entry = require('./entry');
 var Schema = mongoose.Schema;
+ 
 
 var UserSchema = new Schema(
     {
-    username: {type: String, required: true, max: 100},
+    username: {type: String, required: true, max: 100, unique: true},
     password: {type: String, required: true, max: 100},
     email: {type: String, required: true},
-    entries: [{ type: Schema.ObjectId, ref: 'Entry' }]
+    entries: [Entry.schema ]
     }
   );
  

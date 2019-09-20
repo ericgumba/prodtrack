@@ -4,11 +4,27 @@ var Entry = require('../models/entry')
 // register user
 
 function grabUser(username){
-    return User.findOne({username})
-
+    return User.findOne({username}) 
 }
 
-function findAndUpdateResults(error, succ){
+function grabTask(tasks, taskName){
+    for ( let task of tasks ) {
+        if ( task.name == taskName ) {
+            return task
+        }
+    }
+}
+
+
+function grabEntry(entries, entryTitle){
+    for (let entry of entries){
+        if (entry.title == entryTitle) {
+            return entry
+        }
+    }
+}
+
+const resultsOfFindOne = (error, succ) => {
     if(error){
         console.log(error)
     }else{
@@ -16,11 +32,26 @@ function findAndUpdateResults(error, succ){
     }
 }
 
+exports.update_task = ( req, res, next ) => {
+
+    User.findOne( {username: req.body.username}, (err, user) => {
+
+        if(err){
+            res.send(err)
+        }
+ 
+        let entry = grabEntry(user.entries, req.body.entryTitle) 
+        let task = grabTask(entry.tasks, req.body.taskName)
+        task.minutesComplete = req.body.minutesComplete
+        user.save((err, newUser) => { 
+            res.send(newUser)
+        })
+    } )
+}
+
 exports.user_create = ( req, res, next ) => {
  
-    // create new user object~
-
-    console.log("HERE IS NODY   ",     req.body)
+    // create new user object~ 
     let user = new User(
         {
             username: req.body.username,
@@ -28,9 +59,7 @@ exports.user_create = ( req, res, next ) => {
             email: req.body.email,
             entries: []
         }
-    )
-
-    console.log("tESTESTET") 
+    ) 
 
     user.save( (err) => {
         if ( err ){ 
@@ -46,7 +75,7 @@ exports.user_create = ( req, res, next ) => {
  
 
 exports.user_login = (req, res, next) =>{
-    let user = User.findOne(
+    User.findOne(
         {
             username: req.body.username,
             password: req.body.password
@@ -55,52 +84,47 @@ exports.user_login = (req, res, next) =>{
             console.log("user found ", doc)
 
             if (!doc){
-                res.send("Incorrect username or password")
+                res.send({msg:"Incorrect username or password"})
             }
 
-            res.send("OK")
+            res.send({msg:doc})
         })
-        .catch( (err) => {
-            console.log("===============================")
-            console.log(err)
-            res.send("NOT OK")
+        .catch( (err) => { 
+            res.send({msg:"NOT OK"})
         } ) 
 }
-exports.task_create = (req, res, next) =>{  
- 
- 
+
+
+// TODO Finish this function
+exports.task_create = (req, res, next) =>{   
     let newTask = new Task(
         {
-            name: req.body.name,
-            minutesComplete: 0,
-            hoursComplete: 0,
-            pomodorosComplete: 0
+            name: req.body.taskName,
+            minutesComplete: 0
         }
-    )
+    )  
+    User.findOne( {username: req.body.username}, (err, user) => {
 
-    Entry.findOneAndUpdate( 
-        {title: req.body.title},
-        { $push: { tasks: newTask } }, 
-        findAndUpdateResults(err, succ)
-     )
+        if(err){
+            res.send(err)
+        }
  
-    // example of updating a sub document
-    // https://stackoverflow.com/questions/33049707/push-items-into-mongo-array-via-mongoose
-    
-    // var objFriends = { fname:"fname",lname:"lname",surname:"surname" };
-    // Friend.findOneAndUpdate(
-    //    { _id: req.body.id }, 
-    //    { $push: { friends: objFriends  } },
-    //   function (error, success) {
-    //         if (error) {
-    //             console.log(error);
-    //         } else {
-    //             console.log(success);
-    //         }
-    //     });
-    // )
+        let entry = grabEntry(user.entries, req.body.entryTitle) 
+        entry.tasks.push(newTask)
+        user.save((err, newUser) => { 
+            res.send(newUser)
+        })
+    } ) 
 }
 
+exports.test_query = (req, res, next) =>{
+    const doc =  User.findOne({username: "e"}, (err, username) => {
+
+        let z = grabEntry(username.entries, "fmoney" )
+
+        res.send(z) 
+        })
+}
 
 exports.entry_create = (req, res, next) => {
 
@@ -108,20 +132,24 @@ exports.entry_create = (req, res, next) => {
     (
         {
             title: req.body.title,
-            tasks: [],
-            minutesComplete: 0,
-            hoursComplete: 0,
-            pomodorosComplete: 0
+            tasks: []
         }
     )
 
-        // todo finisih this one.
-    User.findOneAndUpdate(
-        {_id: req.body.id},
-        { $push: { entries: newEntry } },
-        findAndUpdateResults(error, succ)
-    )
+    const doc =  User.findOne({username: req.body.username}, (err, username) => {
 
+        if (err){
+            res.send(err)
+        }
+         
+        username.entries.push(newEntry)
+        
+        var subdoc = username.entries[username.entries.length -1 ]
+         
+        username.save( (err, prod) =>{ 
+            res.send(prod)
+        }) 
+    })
 }
 
  
