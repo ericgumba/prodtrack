@@ -18,8 +18,7 @@ router.post('/create-task', user_controller.task_create)
 router.post('/update-task', user_controller.update_task)
 
 router.post('/edit-task', user_controller.edit_task)
-
-router.get('/testquery', user_controller.test_query)
+ 
 
 
 module.exports = router;
