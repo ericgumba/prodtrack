@@ -2,10 +2,7 @@ var User = require('../models/user')
 var Task = require('../models/task')
 var Entry = require('../models/entry')
 // register user
-
-function grabUser(username){
-    return User.findOne({username}) 
-}
+ 
 
 function grabTask(tasks, taskName){
     for ( let task of tasks ) {
@@ -23,14 +20,7 @@ function grabEntry(entries, entryTitle){
         }
     }
 }
-
-const resultsOfFindOne = (error, succ) => {
-    if(error){
-        console.log(error)
-    }else{
-        console.log(succ)
-    }
-}
+ 
 
 exports.update_task = ( req, res, next ) => {
 
@@ -141,6 +131,34 @@ exports.test_query = (req, res, next) =>{
 
         res.send(z) 
         })
+}
+
+exports.delete_task = (req, res, next) => {
+
+    console.log(req.body.username)
+
+    if (req.body.username === undefined) res.send("UNDEFINED USERNAME")
+    User.findOne( {username: req.body.username}, (err, user) => {
+
+        console.log("TESTESTESTSET")
+
+        if(err){
+            res.send(err)
+        }
+
+        let entry = grabEntry( user.entries, req.body.entryTitle )
+
+        entry.tasks = entry.tasks.filter( ( task ) => { 
+            return task.name != req.body.taskName
+        } )
+
+        console.log(entry.tasks)
+
+        user.save( (err, prod) =>{ 
+            res.send(prod)
+        }) 
+
+    } )
 }
 
 exports.entry_create = (req, res, next) => {

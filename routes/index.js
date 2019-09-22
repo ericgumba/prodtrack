@@ -18,6 +18,8 @@ router.post('/create-task', user_controller.task_create)
 router.post('/update-task', user_controller.update_task)
 
 router.post('/edit-task', user_controller.edit_task)
+
+router.post("/delete-task", user_controller.delete_task)
  
 
 
