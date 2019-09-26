@@ -4,31 +4,42 @@ import { useState, useEffect } from 'react';
 
 const Timer = (props) => {
   const [seconds, setSeconds] = useState(0);
-  const [isActive, setIsActive] = useState(true);
-  const [secondsLeft, setSecondsLeft] = useState(0)
-  const [workMinutesLeft, setWorkMinutesLeft] = useState(props.workDefinition)
-  const [breakMinutesLeft, setBreakMinutesLeft] = useState(props.breakDefinition)
-  const [ isWorking, setIsWorking ] = useState(true)
+  const [isActive, setIsActive] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(props.timerSecondsLeft)
+  const [workMinutesLeft, setWorkMinutesLeft] = useState(props.timerWorkMinutesLeft)
+  const [breakMinutesLeft, setBreakMinutesLeft] = useState(props.timerBreakMinutesLeft)
+  const [ isWorking, setIsWorking ] = useState(props.timerIsInWorkMode)
   function toggle() {
     setIsActive(!isActive);
   }
-
-  function reset() {
-    setSeconds(0);
-    setIsActive(false);
+ 
+  function saveWork(){
+    console.log(props.timerWorkMinutesLeft)
+    console.log(props.timerSecondsLeft)
+    if ( isWorking ){
+      props.setTimerWorkMinutesLeft(workMinutesLeft)
+      props.setTimerSecondsLeft(secondsLeft)
+    } else{
+        props.setTimerBreakMinutesLeft(breakMinutesLeft)
+        props.setTimerSecondsLeft(secondsLeft)
+    }
   }
  
   function workCountdown() {
     if (workMinutesLeft <= 0 & secondsLeft <= 0 ){
         setIsWorking(false)
-        setWorkMinutesLeft(props.workDefinition)
+        setWorkMinutesLeft(props.workDefinition)  
     }
     else if (secondsLeft <= 0  ){
         setSecondsLeft(59)
         setWorkMinutesLeft(workMinutesLeft - 1)
+        saveWork()
+
     }
         else{
         setSecondsLeft(secondsLeft => secondsLeft - 1); 
+        saveWork()
+    
     }
   }
 
@@ -40,9 +51,11 @@ const Timer = (props) => {
       else if (secondsLeft <= 0){
           setSecondsLeft(59)
           setBreakMinutesLeft(breakMinutesLeft - 1)
+          saveWork()
       }
           else{
           setSecondsLeft(secondsLeft => secondsLeft - 1); 
+          saveWork()
       }
   }
  
@@ -59,7 +72,7 @@ const Timer = (props) => {
             breakCountdown()
         }
       }, 1000);
-    } else if (!isActive && seconds !== 0) {
+    } else if (!isActive && secondsLeft !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
@@ -74,10 +87,7 @@ const Timer = (props) => {
 
         <button className={`button button-primary button-primary-${isActive ? 'active' : 'inactive'}`} onClick={toggle}>
           {isActive ? 'Pause' : 'Start'}
-        </button>
-        <button className="button" onClick={reset}>
-          Reset
-        </button>
+        </button> 
  
       </div>
     </div>

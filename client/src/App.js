@@ -6,6 +6,7 @@ import Timer from './components/Timer'
 import Navbar from './components/Navbar'
 import Register from './components/Register' // form
 
+
 function App() {
 
   const TIMER = "TIMER"
@@ -27,19 +28,46 @@ function App() {
 
   const [screen, setScreen] = useState(TIMER)
 
-  const [screenDisplayed, setScreenDisplayed] = useState(<Timer workDefinition={workDefinition} breakDefinition={breakDefinition} isWorking={isWorking} setIsWorking={ () => setIsWorking( !isWorking ) } ></Timer>)
   
-  // todo: save state of timer ...
   
-  function screenToBeDisplayed(){
-    console.log(screen)
-    if (screen === TIMER){
+  // below saves state of timer
+  const [timerWorkMinutesLeft, setTimerWorkMinutesLeft] = useState(workDefinition)
+  const [timerSecondsLeft, setTimerSecondsLeft] = useState(0)
+  const [timerBreakMinutesLeft, setTimerBreakMinutesLeft ] = useState(breakDefinition)
+  const [timerIsInWorkMode, setTimerIsInWorkMode ] = useState(true)
+  
+  
+  function createTimer(){
+    return(
+      <Timer  
+      workDefinition={workDefinition}
+      breakDefinition={breakDefinition}
+      timerWorkMinutesLeft={timerWorkMinutesLeft}
+      setTimerWorkMinutesLeft={setTimerWorkMinutesLeft}
+      timerSecondsLeft={timerSecondsLeft}
+      setTimerSecondsLeft={setTimerSecondsLeft}
+      timerBreakMinutesLeft={timerBreakMinutesLeft}
+      setTimerBreakMinutesLeft={setTimerBreakMinutesLeft}
+      timerIsInWorkMode={timerIsInWorkMode}
+      setTimerIsInWorkMode={setTimerIsInWorkMode}  
+      ></Timer>
+      )
+    }
 
-      setScreenDisplayed(<Timer workDefinition={workDefinition} breakDefinition={breakDefinition} isWorking={isWorking} setIsWorking={ () => setIsWorking( !isWorking ) } ></Timer>)
+
+    const [screenDisplayed, setScreenDisplayed] = useState(createTimer())
+
+
+    function screenToBeDisplayed(){
+      console.log(screen)
+      if (screen === TIMER){
+        
+      setScreenDisplayed( createTimer() )
       
-    } else if (screen === SETTINGS ){ 
+    } else if (screen === SETTINGS ){
+      
+      
     } else if (screen === STATS){
-
 
     }
     else if (screen === REGISTER){ 

@@ -19,9 +19,9 @@ function Register(props){
         <Form.Control type="password" placeholder="Password" />
     </Form.Group> 
 
-    <Form.Group controlId="formBasicPassword">
+    <Form.Group controlId="formReenterPassword">
         <Form.Label>Re-enter Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
+        <Form.Control type="password" placeholder="Re-eneter Password" />
     </Form.Group> 
 
     <Button variant="primary" type="submit">
