@@ -1,32 +1,65 @@
-import React from 'react';
-import logo from './logo.svg';
+import React from 'react'; 
 import {useState, useEffect} from "react"
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import Timer from './components/Timer'
+import Navbar from './components/Navbar'
+import Register from './components/Register' // form
 
 function App() {
 
-  let [username, setUsername] = useState("")
+  const TIMER = "TIMER"
+  const SETTINGS = "SETTINGS"
+  const STATS = "STATS"
+  const REGISTER = "REGISTER"
+  const LOGIN = "LOGIN"
 
-  useEffect(
-    // fetch
-  )
+
+  let [username, setUsername] = useState("")
+  let [minutesCompleted, setMinutesCompleted] = useState(0) 
+  let [hoursCompleted, setHoursCompleted] = useState(minutesCompleted/60) 
+  let [ workDefinition, setWorkDefinition ] = useState(1) 
+  let [ breakDefinition, setBreakDefinition ] = useState(2) 
+  let [ pomodorosCompleted, setPomodorosCompleted ] = useState( minutesCompleted / workDefinition)
+  let [ task, setTask ] = useState("")
+  let [ isWorking, setIsWorking ] = useState(false)
+   
+
+  const [screen, setScreen] = useState(TIMER)
+
+  const [screenDisplayed, setScreenDisplayed] = useState(<Timer workDefinition={workDefinition} breakDefinition={breakDefinition} isWorking={isWorking} setIsWorking={ () => setIsWorking( !isWorking ) } ></Timer>)
+  
+  // todo: save state of timer ...
+  
+  function screenToBeDisplayed(){
+    console.log(screen)
+    if (screen === TIMER){
+
+      setScreenDisplayed(<Timer workDefinition={workDefinition} breakDefinition={breakDefinition} isWorking={isWorking} setIsWorking={ () => setIsWorking( !isWorking ) } ></Timer>)
+      
+    } else if (screen === SETTINGS ){ 
+    } else if (screen === STATS){
+
+
+    }
+    else if (screen === REGISTER){ 
+      setScreenDisplayed(<Register></Register>)
+    }
+  }
+
+  useEffect( ()=> {
+    screenToBeDisplayed()
+  }, [screen] )
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App"> 
+
+    <Navbar
+    setScreen={setScreen}
+    ></Navbar> 
+    {screenDisplayed}
+ 
+
     </div>
   );
 }
