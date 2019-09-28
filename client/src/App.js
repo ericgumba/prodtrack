@@ -21,7 +21,7 @@ function App() {
   let [username, setUsername] = useState("")
   let [minutesCompleted, setMinutesCompleted] = useState(0)  
   let [ workDefinition, setWorkDefinition ] = useState(2) 
-  let [ breakDefinition, setBreakDefinition ] = useState(1)  
+  let [ breakDefinition, setBreakDefinition ] = useState(0)  
   let [ task, setTask ] = useState("") 
   let [ entry, setEntry ] = useState("") 
   const [screen, setScreen] = useState(TIMER)
@@ -41,7 +41,11 @@ function App() {
     //TODO pass in timer state to reset values
     return(
       <>
-        <Settings
+        <Settings 
+        setTimerIsInWorkMode={setTimerIsInWorkMode}
+        setTimerBreakMinutesLeft={setTimerBreakMinutesLeft}
+        setTimerWorkMinutesLeft={setTimerWorkMinutesLeft}
+        setTimerSecondsLeft={setTimerSecondsLeft}
         setWorkDefinition={setWorkDefinition}
         setBreakDefinition={setBreakDefinition}
         />
@@ -98,8 +102,7 @@ function App() {
     const [screenDisplayed, setScreenDisplayed] = useState(createTimer())
 
 
-    function screenToBeDisplayed(){
-      console.log(screen)
+    function screenToBeDisplayed(){ 
       if (screen === TIMER){
         
       setScreenDisplayed( createTimer() )

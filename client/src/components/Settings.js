@@ -11,6 +11,10 @@ function Settings(props) {
 
   function updateSettings(e) {
     e.preventDefault()
+    props.setTimerWorkMinutesLeft(workDef)
+    props.setTimerBreakMinutesLeft(breakDef)
+    props.setTimerSecondsLeft(0)
+    props.setTimerIsInWorkMode(true)
     props.setWorkDefinition(workDef)
     props.setBreakDefinition(breakDef)
   }
