@@ -5,7 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Timer from './components/Timer'
 import Navbar from './components/Navbar'
 import Register from './components/Register' // form
-
+import Login from './components/Login'
+import EntryList from './components/EntryList'
+import Settings from './components/Settings'
 
 function App() {
 
@@ -17,16 +19,13 @@ function App() {
 
 
   let [username, setUsername] = useState("")
-  let [minutesCompleted, setMinutesCompleted] = useState(0) 
-  let [hoursCompleted, setHoursCompleted] = useState(minutesCompleted/60) 
+  let [minutesCompleted, setMinutesCompleted] = useState(0)  
   let [ workDefinition, setWorkDefinition ] = useState(1) 
-  let [ breakDefinition, setBreakDefinition ] = useState(2) 
-  let [ pomodorosCompleted, setPomodorosCompleted ] = useState( minutesCompleted / workDefinition)
-  let [ task, setTask ] = useState("")
-  let [ isWorking, setIsWorking ] = useState(false)
-   
-
+  let [ breakDefinition, setBreakDefinition ] = useState(0)  
+  let [ task, setTask ] = useState("") 
+  let [ entry, setEntry ] = useState("") 
   const [screen, setScreen] = useState(TIMER)
+  const [taskEntryDictionary, setTaskEntryDictionary] = useState({})
 
   
   
@@ -36,23 +35,58 @@ function App() {
   const [timerBreakMinutesLeft, setTimerBreakMinutesLeft ] = useState(breakDefinition)
   const [timerIsInWorkMode, setTimerIsInWorkMode ] = useState(true)
   
+  function createSettings(){
+    return(
+      <>
+        <Settings
+        setWorkDefinition={setWorkDefinition}
+        setBreakDefinition={setBreakDefinition}
+        />
+      </>
+    )
+  }
   
   function createTimer(){
     return(
-      <Timer  
-      workDefinition={workDefinition}
-      breakDefinition={breakDefinition}
-      timerWorkMinutesLeft={timerWorkMinutesLeft}
-      setTimerWorkMinutesLeft={setTimerWorkMinutesLeft}
-      timerSecondsLeft={timerSecondsLeft}
-      setTimerSecondsLeft={setTimerSecondsLeft}
-      timerBreakMinutesLeft={timerBreakMinutesLeft}
-      setTimerBreakMinutesLeft={setTimerBreakMinutesLeft}
-      timerIsInWorkMode={timerIsInWorkMode}
-      setTimerIsInWorkMode={setTimerIsInWorkMode}  
-      ></Timer>
+      <div>
+        <Timer  
+        workDefinition={workDefinition}
+        breakDefinition={breakDefinition}
+        timerWorkMinutesLeft={timerWorkMinutesLeft}
+        setTimerWorkMinutesLeft={setTimerWorkMinutesLeft}
+        timerSecondsLeft={timerSecondsLeft}
+        setTimerSecondsLeft={setTimerSecondsLeft}
+        timerBreakMinutesLeft={timerBreakMinutesLeft}
+        setTimerBreakMinutesLeft={setTimerBreakMinutesLeft}
+        timerIsInWorkMode={timerIsInWorkMode}
+        setTimerIsInWorkMode={setTimerIsInWorkMode}  
+        setTask={setTask}
+        setMinutesCompleted={setMinutesCompleted}
+        minutesCompleted={minutesCompleted}
+        ></Timer>
+
+        <EntryList
+        task={task}
+        setEntry={setEntry}
+        taskEntryDictionary={taskEntryDictionary}
+        entry={entry}
+        minutesCompleted={minutesCompleted} 
+        workDefinition={workDefinition}
+        >
+
+        </EntryList>
+      </div>
+      
       )
     }
+
+    function createLogin(){
+      return (
+        <Login></Login>
+      )
+    }
+
+    
 
 
     const [screenDisplayed, setScreenDisplayed] = useState(createTimer())
@@ -66,6 +100,7 @@ function App() {
       
     } else if (screen === SETTINGS ){
       
+      setScreenDisplayed( createSettings() )
       
     } else if (screen === STATS){
 
@@ -73,11 +108,33 @@ function App() {
     else if (screen === REGISTER){ 
       setScreenDisplayed(<Register></Register>)
     }
+    else if (screen === LOGIN){
+      setScreenDisplayed(createLogin())
+    }
+  }
+
+  // todo: fix this to init or update 
+  function updateStats(){  
+    console.log("TEST")
+    if(taskEntryDictionary[task])
+      taskEntryDictionary[task] = taskEntryDictionary[task] +1
+    else
+      taskEntryDictionary[task] = 1 
+
+      setTaskEntryDictionary(taskEntryDictionary)
+
+
   }
 
   useEffect( ()=> {
+    console.log("testest")
     screenToBeDisplayed()
-  }, [screen] )
+  }, [screen,task] )
+
+  useEffect( () => {
+    // updateStats()
+    console.log("test")
+  }, [minutesCompleted ] )
 
   return (
     <div className="App"> 
@@ -86,6 +143,7 @@ function App() {
     setScreen={setScreen}
     ></Navbar> 
     {screenDisplayed}
+    {minutesCompleted} 
  
 
     </div>

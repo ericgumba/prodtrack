@@ -1,6 +1,7 @@
 import React from 'react';  
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import { useState, useEffect } from 'react';
+import Form from 'react-bootstrap/Form'
 
 const Timer = (props) => {
   const [seconds, setSeconds] = useState(0);
@@ -9,13 +10,13 @@ const Timer = (props) => {
   const [workMinutesLeft, setWorkMinutesLeft] = useState(props.timerWorkMinutesLeft)
   const [breakMinutesLeft, setBreakMinutesLeft] = useState(props.timerBreakMinutesLeft)
   const [ isWorking, setIsWorking ] = useState(props.timerIsInWorkMode)
+
+  const [minutesCompleted, setMinutesCompleted] = useState(props.minutesCompleted)
   function toggle() {
     setIsActive(!isActive);
   }
  
-  function saveWork(){
-    console.log(props.timerWorkMinutesLeft)
-    console.log(props.timerSecondsLeft)
+  function saveWork(){ 
     if ( isWorking ){
       props.setTimerWorkMinutesLeft(workMinutesLeft)
       props.setTimerSecondsLeft(secondsLeft)
@@ -24,14 +25,21 @@ const Timer = (props) => {
         props.setTimerSecondsLeft(secondsLeft)
     }
   }
- 
+
+
+  // todo: replace with udpate stats instead
   function workCountdown() {
     if (workMinutesLeft <= 0 & secondsLeft <= 0 ){
         setIsWorking(false)
         setWorkMinutesLeft(props.workDefinition)  
+        console.log('testere') 
+        props.setMinutesCompleted(minutesCompleted+1)
     }
     else if (secondsLeft <= 0  ){
         setSecondsLeft(59)
+        if ( workMinutesLeft != props.workDefinition )
+        console.log('tester')
+        props.setMinutesCompleted(props.minutesCompleted+1)
         setWorkMinutesLeft(workMinutesLeft - 1)
         saveWork()
 
@@ -71,12 +79,16 @@ const Timer = (props) => {
         } else {
             breakCountdown()
         }
-      }, 1000);
+      }, 100);
     } else if (!isActive && secondsLeft !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
   }, [isActive, secondsLeft, workMinutesLeft, breakMinutesLeft, isWorking]);
+
+
+  //todo add form that sets task.
+  // bug possibility: may reset timer somehow. 
 
   return (
     <div className="app">
@@ -89,6 +101,10 @@ const Timer = (props) => {
           {isActive ? 'Pause' : 'Start'}
         </button> 
  
+      </div>
+      <div className="task">
+          <h1> Input your task here </h1>
+        <Form.Control size="lg" type="text" placeholder="Large text" onChange={(e) => {props.setTask(e.target.value)}} />
       </div>
     </div>
   );
