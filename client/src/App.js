@@ -8,6 +8,7 @@ import Register from './components/Register' // form
 import Login from './components/Login'
 import EntryList from './components/EntryList'
 import Settings from './components/Settings'
+import Stats from './components/Stats'
 
 function App() {
 
@@ -52,7 +53,13 @@ function App() {
       </>
     )
   }
-  
+  function createStats(){
+    return (
+      <Stats>
+
+      </Stats>
+    )
+  }
   function createTimer(){
     return(
       <div>
@@ -112,7 +119,7 @@ function App() {
       setScreenDisplayed( createSettings() )
       
     } else if (screen === STATS){
-
+      setScreenDisplayed( createStats() )
     }
     else if (screen === REGISTER){ 
       setScreenDisplayed(<Register></Register>)
@@ -125,7 +132,7 @@ function App() {
   // todo: fix this to init or update 
   function updateStats(){  
     console.log("updating dictionary")
-    if(task){
+    if( task){
       if(taskEntryDictionary[task])
         taskEntryDictionary[task] = taskEntryDictionary[task] +1
       else

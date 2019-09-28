@@ -6,8 +6,7 @@ import Form from 'react-bootstrap/Form'
 const Timer = (props) => { 
   const [seconds, setSeconds] = useState(props.timerSecondsLeft)
   const [isActive, setIsActive] = useState(false) 
-  const [isWorking, setIsWorking] = useState(props.timerIsInWorkMode)
-  // const [workMinutesLeft, setTimerWorkMinutesLeft] = useState(props.timerWorkMinutesLeft)
+  const [isWorking, setIsWorking] = useState(props.timerIsInWorkMode) 
   function toggle() {
     setIsActive(!isActive)
     props.setTimerIsActive(!props.timerIsActive);
