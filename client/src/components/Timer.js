@@ -11,6 +11,7 @@ const Timer = (props) => {
   const [workMinutesLeft, setWorkMinutesLeft] = useState(props.timerWorkMinutesLeft)
   const [breakMinutesLeft, setBreakMinutesLeft] = useState(props.timerBreakMinutesLeft)
   const [ isWorking, setIsWorking ] = useState(props.timerIsInWorkMode)
+  const [task, setTask] = props.task
 
   const [minutesCompleted, setMinutesCompleted] = useState(props.minutesCompleted)
   function toggle() {
@@ -33,13 +34,12 @@ const Timer = (props) => {
     if (workMinutesLeft <= 0 & secondsLeft <= 0 ){
         setIsWorking(false)
         setWorkMinutesLeft(props.workDefinition)  
+        setSecondsLeft(59)
         console.log('testere') 
-        props.setMinutesCompleted(minutesCompleted+1)
+        props.setMinutesCompleted(props.minutesCompleted+1)
     }
     else if (secondsLeft <= 0  ){
-        setSecondsLeft(59)
-        if ( workMinutesLeft != props.workDefinition )
-        console.log('tester')
+        setSecondsLeft(59) 
         props.setMinutesCompleted(props.minutesCompleted+1)
         setWorkMinutesLeft(workMinutesLeft - 1)
         saveWork()

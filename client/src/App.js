@@ -61,6 +61,7 @@ function App() {
         timerIsInWorkMode={timerIsInWorkMode}
         setTimerIsInWorkMode={setTimerIsInWorkMode}  
         setTask={setTask}
+        task={task}
         setMinutesCompleted={setMinutesCompleted}
         minutesCompleted={minutesCompleted}
         ></Timer>
@@ -115,21 +116,27 @@ function App() {
 
   // todo: fix this to init or update 
   function updateStats(){  
-    console.log("TEST")
-    if(taskEntryDictionary[task])
-      taskEntryDictionary[task] = taskEntryDictionary[task] +1
-    else
-      taskEntryDictionary[task] = 1 
-
+    console.log("updating dictionary")
+    if(task){
+      if(taskEntryDictionary[task])
+        taskEntryDictionary[task] = taskEntryDictionary[task] +1
+      else
+        taskEntryDictionary[task] = 1 
+}
       setTaskEntryDictionary(taskEntryDictionary)
 
 
   }
 
-  useEffect( ()=> {
-    console.log("testest")
+  useEffect( ()=> {  
     screenToBeDisplayed()
   }, [screen,timerWorkMinutesLeft,timerBreakMinutesLeft,timerIsInWorkMode] )
+
+  useEffect( () =>{
+    console.log('hey there dog man')
+    updateStats()
+    screenToBeDisplayed()
+  }, [minutesCompleted] )
  
   return (
     <div className="App"> 
@@ -137,8 +144,7 @@ function App() {
     <Navbar
     setScreen={setScreen}
     ></Navbar> 
-    {screenDisplayed}
-    {minutesCompleted} 
+    {screenDisplayed} 
  
 
     </div>

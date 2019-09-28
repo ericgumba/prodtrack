@@ -5,6 +5,8 @@
 import React from 'react'; 
 import {useState, useEffect} from "react"
 
+
+// give children 
 function EntryList(props){
 
     let todaysEntry = new Date()
@@ -24,8 +26,11 @@ function EntryList(props){
     return(
         <div>
             {todaysEntry}
-            Total Time Spent Working: {props.minutesCompleted} 
-            {props.task}
+            Total Time Spent Working: {props.minutesCompleted}  
+
+            { Object.entries( props.taskEntryDictionary).map((key, val) =>{
+                return (<div> {key}, {val} </div> )
+            } )  }
         </div>
     )
 }
