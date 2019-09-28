@@ -20,7 +20,7 @@ function App() {
 
   let [username, setUsername] = useState("")
   let [minutesCompleted, setMinutesCompleted] = useState(0)  
-  let [ workDefinition, setWorkDefinition ] = useState(1) 
+  let [ workDefinition, setWorkDefinition ] = useState(2) 
   let [ breakDefinition, setBreakDefinition ] = useState(0)  
   let [ task, setTask ] = useState("") 
   let [ entry, setEntry ] = useState("") 

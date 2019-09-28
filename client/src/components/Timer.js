@@ -40,8 +40,8 @@ const Timer = (props) => {
     }
     else if (secondsLeft <= 0  ){
         setSecondsLeft(59) 
-        props.setMinutesCompleted(props.minutesCompleted+1)
-        setWorkMinutesLeft(workMinutesLeft - 1)
+        setWorkMinutesLeft(workMinutesLeft - 1) 
+        props.setMinutesCompleted(props.minutesCompleted+1) 
         saveWork()
 
     }
