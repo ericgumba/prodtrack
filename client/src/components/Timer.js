@@ -68,11 +68,9 @@ const Timer = (props) => {
     if (isActive) { 
       interval = setInterval(() => {
 
-        if (isWorking){
-          console.log("WORK")
+        if (isWorking){ 
             workCountdown()
-        } else {
-          console.log("BREAK")
+        } else { 
             breakCountdown()
         }
       }, 100);

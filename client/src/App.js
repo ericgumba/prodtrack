@@ -37,6 +37,8 @@ function App() {
   const [timerIsActive, setTimerIsActive] = useState(false)
   
   function createSettings(){
+
+    //TODO pass in timer state to reset values
     return(
       <>
         <Settings
@@ -138,7 +140,9 @@ function App() {
     timerBreakMinutesLeft,
     timerIsInWorkMode, 
     timerSecondsLeft,
-    timerIsActive
+    timerIsActive,
+    workDefinition,
+    breakDefinition
   ] )
 
   useEffect( () =>{
