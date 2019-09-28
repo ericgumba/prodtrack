@@ -129,13 +129,8 @@ function App() {
   useEffect( ()=> {
     console.log("testest")
     screenToBeDisplayed()
-  }, [screen,task] )
-
-  useEffect( () => {
-    // updateStats()
-    console.log("test")
-  }, [minutesCompleted ] )
-
+  }, [screen,timerWorkMinutesLeft,timerBreakMinutesLeft,timerIsInWorkMode] )
+ 
   return (
     <div className="App"> 
 

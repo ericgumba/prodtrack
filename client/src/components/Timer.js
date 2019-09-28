@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
 const Timer = (props) => {
   const [seconds, setSeconds] = useState(0);
@@ -93,7 +94,7 @@ const Timer = (props) => {
   return (
     <div className="app">
       <div className="time">
-        {isWorking ? "Working" + workMinutesLeft + "m" + secondsLeft + "s" : `Breaking ${breakMinutesLeft}m${secondsLeft}`} 
+        {props.timerIsInWorkMode ? "Working" + props. timerWorkMinutesLeft + "m" + secondsLeft + "s" : `Breaking ${props.timerBreakMinutesLeft}m${secondsLeft}`} 
       </div>
       <div className="row">
 
@@ -101,11 +102,9 @@ const Timer = (props) => {
           {isActive ? 'Pause' : 'Start'}
         </button> 
  
-      </div>
-      <div className="task">
+      </div> 
           <h1> Input your task here </h1>
-        <Form.Control size="lg" type="text" placeholder="Large text" onChange={(e) => {props.setTask(e.target.value)}} />
-      </div>
+        <Form.Control size="lg" type="text" placeholder="Large text" onChange={(e) => {props.setTask(e.target.value)}} /> 
     </div>
   );
 };
