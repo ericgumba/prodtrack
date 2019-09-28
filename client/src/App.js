@@ -21,7 +21,7 @@ function App() {
   let [username, setUsername] = useState("")
   let [minutesCompleted, setMinutesCompleted] = useState(0)  
   let [ workDefinition, setWorkDefinition ] = useState(2) 
-  let [ breakDefinition, setBreakDefinition ] = useState(0)  
+  let [ breakDefinition, setBreakDefinition ] = useState(1)  
   let [ task, setTask ] = useState("") 
   let [ entry, setEntry ] = useState("") 
   const [screen, setScreen] = useState(TIMER)
@@ -34,6 +34,7 @@ function App() {
   const [timerSecondsLeft, setTimerSecondsLeft] = useState(0)
   const [timerBreakMinutesLeft, setTimerBreakMinutesLeft ] = useState(breakDefinition)
   const [timerIsInWorkMode, setTimerIsInWorkMode ] = useState(true)
+  const [timerIsActive, setTimerIsActive] = useState(false)
   
   function createSettings(){
     return(
@@ -50,6 +51,8 @@ function App() {
     return(
       <div>
         <Timer  
+        timerIsActive={timerIsActive}
+        setTimerIsActive={setTimerIsActive}
         workDefinition={workDefinition}
         breakDefinition={breakDefinition}
         timerWorkMinutesLeft={timerWorkMinutesLeft}
@@ -130,7 +133,13 @@ function App() {
 
   useEffect( ()=> {  
     screenToBeDisplayed()
-  }, [screen,timerWorkMinutesLeft,timerBreakMinutesLeft,timerIsInWorkMode] )
+  }, [screen,
+    timerWorkMinutesLeft,
+    timerBreakMinutesLeft,
+    timerIsInWorkMode, 
+    timerSecondsLeft,
+    timerIsActive
+  ] )
 
   useEffect( () =>{
     console.log('hey there dog man')

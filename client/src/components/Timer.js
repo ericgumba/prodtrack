@@ -4,88 +4,86 @@ import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
-const Timer = (props) => {
-  const [seconds, setSeconds] = useState(0);
-  const [isActive, setIsActive] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(props.timerSecondsLeft)
-  const [workMinutesLeft, setWorkMinutesLeft] = useState(props.timerWorkMinutesLeft)
-  const [breakMinutesLeft, setBreakMinutesLeft] = useState(props.timerBreakMinutesLeft)
-  const [ isWorking, setIsWorking ] = useState(props.timerIsInWorkMode)
-  const [task, setTask] = props.task
-
-  const [minutesCompleted, setMinutesCompleted] = useState(props.minutesCompleted)
+const Timer = (props) => { 
+  const [seconds, setSeconds] = useState(props.timerSecondsLeft)
+  const [isActive, setIsActive] = useState(props.timerIsActive) 
+  const [isWorking, setIsWorking] = useState(props.timerIsInWorkMode)
   function toggle() {
-    setIsActive(!isActive);
+    setIsActive(!isActive)
+    props.setTimerIsActive(!props.timerIsActive);
   }
- 
-  function saveWork(){ 
-    if ( isWorking ){
-      props.setTimerWorkMinutesLeft(workMinutesLeft)
-      props.setTimerSecondsLeft(secondsLeft)
-    } else{
-        props.setTimerBreakMinutesLeft(breakMinutesLeft)
-        props.setTimerSecondsLeft(secondsLeft)
-    }
-  }
+  
 
 
   // todo: replace with udpate stats instead
   function workCountdown() {
-    if (workMinutesLeft <= 0 & secondsLeft <= 0 ){
-        setIsWorking(false)
-        setWorkMinutesLeft(props.workDefinition)  
-        setSecondsLeft(59)
-        console.log('testere') 
-        props.setMinutesCompleted(props.minutesCompleted+1)
+    if (props.timerWorkMinutesLeft < 0){
+      setIsWorking(false)  
+
+      props.setTimerIsInWorkMode(false) 
+      props.setTimerWorkMinutesLeft(props.workDefinition)  
+      setSeconds(0)
+      props.setTimerSecondsLeft(0)  
     }
-    else if (secondsLeft <= 0  ){
-        setSecondsLeft(59) 
-        setWorkMinutesLeft(workMinutesLeft - 1) 
-        props.setMinutesCompleted(props.minutesCompleted+1) 
-        saveWork()
+    else if (seconds <= 0  ){ 
+      setSeconds(59)
+      props.setTimerSecondsLeft(59)
+      props.setTimerWorkMinutesLeft(props.timerWorkMinutesLeft - 1) 
+
+      if ( props.timerWorkMinutesLeft !== props.workDefinition )
+      props.setMinutesCompleted(props.minutesCompleted+1) 
 
     }
-        else{
-        setSecondsLeft(secondsLeft => secondsLeft - 1); 
-        saveWork()
+    else{ 
+        
+      setSeconds(seconds-1)  
+      props.setTimerSecondsLeft(props.timerSecondsLeft-1)
     
     }
   }
 
   function breakCountdown() {
-      if(breakMinutesLeft <= 0 & secondsLeft <= 0){
-          setIsWorking(true)
-          setBreakMinutesLeft(props.breakDefinition)
+      if(props.timerBreakMinutesLeft < 0){        
+        setIsWorking(true)  
+
+        props.setTimerIsInWorkMode(true)  
+        props.setTimerBreakMinutesLeft(props.breakDefinition)
+        props.setTimerSecondsLeft(0)
+        setSeconds(0)
       }
-      else if (secondsLeft <= 0){
-          setSecondsLeft(59)
-          setBreakMinutesLeft(breakMinutesLeft - 1)
-          saveWork()
+      else if (seconds <= 0){
+        setSeconds(59)
+        props.setTimerSecondsLeft(59)
+        props.setTimerBreakMinutesLeft(props.timerBreakMinutesLeft - 1) 
       }
-          else{
-          setSecondsLeft(secondsLeft => secondsLeft - 1); 
-          saveWork()
+      else{ 
+        setSeconds(seconds - 1)
+        props.setTimerSecondsLeft(props.timerSecondsLeft-1) 
       }
   }
  
- 
 
-  useEffect(() => {
+  useEffect(() => { 
     let interval = null;
-    if (isActive) {
+    if (isActive) { 
       interval = setInterval(() => {
 
         if (isWorking){
+          console.log("WORK")
             workCountdown()
         } else {
+          console.log("BREAK")
             breakCountdown()
         }
       }, 100);
-    } else if (!isActive && secondsLeft !== 0) {
+    } 
+    
+    //BUG POSSIBILITY
+    else if (!isActive && seconds !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isActive, secondsLeft, workMinutesLeft, breakMinutesLeft, isWorking]);
+  }, [seconds, isActive]);
 
 
   //todo add form that sets task.
@@ -94,7 +92,7 @@ const Timer = (props) => {
   return (
     <div className="app">
       <div className="time">
-        {props.timerIsInWorkMode ? "Working" + props. timerWorkMinutesLeft + "m" + secondsLeft + "s" : `Breaking ${props.timerBreakMinutesLeft}m${secondsLeft}`} 
+        {isWorking ? "Working" + props. timerWorkMinutesLeft + "m" + seconds + "s" : `Breaking ${props.timerBreakMinutesLeft}m${seconds}`} 
       </div>
       <div className="row">
 
