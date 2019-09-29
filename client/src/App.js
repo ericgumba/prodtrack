@@ -20,22 +20,33 @@ function App() {
 
   // state of app and user's stats
   let [username, setUsername] = useState("")
-  let [minutesCompleted, setMinutesCompleted] = useState(0)  
-  let [ workDefinition, setWorkDefinition ] = useState(2) 
-  let [ breakDefinition, setBreakDefinition ] = useState(0)  
-  let [ task, setTask ] = useState("") 
-  let [ entry, setEntry ] = useState("") 
+  let [minutesCompleted, setMinutesCompleted] = useState( 
+    localStorage.getItem('minutesCompleted') || 0)  
+  let [ workDefinition, setWorkDefinition ] = useState(
+    localStorage.getItem('workDefinition') || 1 ) 
+  let [ breakDefinition, setBreakDefinition ] = useState(
+    localStorage.getItem('breakDefinition') || 0)  
+  let [ task, setTask ] = useState(
+    localStorage.getItem('task') || "") 
+  let [ entry, setEntry ] = useState(
+    localStorage.getItem('entry') || "") 
   const [screen, setScreen] = useState(TIMER)
   const [taskEntryDictionary, setTaskEntryDictionary] = useState({})
+  const [totalWork, setTotalWork] = useState([taskEntryDictionary])
 
   
   
   // below saves state of timer
-  const [timerWorkMinutesLeft, setTimerWorkMinutesLeft] = useState(workDefinition)
-  const [timerSecondsLeft, setTimerSecondsLeft] = useState(0)
-  const [timerBreakMinutesLeft, setTimerBreakMinutesLeft ] = useState(breakDefinition)
-  const [timerIsInWorkMode, setTimerIsInWorkMode ] = useState(true)
-  const [timerIsActive, setTimerIsActive] = useState(false)
+  const [timerWorkMinutesLeft, setTimerWorkMinutesLeft] = useState(
+    localStorage.getItem('timerWorkMinutesLeft') || workDefinition)
+  const [timerSecondsLeft, setTimerSecondsLeft] = useState(
+    localStorage.getItem('timerSecondsLeft') || 0)
+  const [timerBreakMinutesLeft, setTimerBreakMinutesLeft ] = useState(
+    localStorage.getItem('timerBreakMinutesLeft') || breakDefinition)
+  const [timerIsInWorkMode, setTimerIsInWorkMode ] = useState(
+    localStorage.getItem('timerIsInWorkMode') || true)
+  const [timerIsActive, setTimerIsActive] = useState(
+    localStorage.getItem('timerIsActive') || false)
   
   function createSettings(){
 
@@ -199,6 +210,10 @@ function App() {
 
   }
 
+  function updateTotal(){
+
+  }
+
   useEffect( ()=> {  
     
     screenToBeDisplayed()
@@ -216,6 +231,7 @@ function App() {
   useEffect( () =>{
     console.log('hey there dog man')
     updateStats()
+    updateTotal()
     screenToBeDisplayed()
   }, [minutesCompleted] )
  
