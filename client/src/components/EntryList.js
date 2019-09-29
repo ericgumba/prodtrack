@@ -12,6 +12,8 @@ function EntryList(props){
     let todaysEntry = new Date()
     todaysEntry = todaysEntry.getFullYear() + '-' + (todaysEntry.getMonth() + 1) + '-' + todaysEntry.getDate();
 
+    props.setEntry(todaysEntry)
+
     const [task, setTask] = useState(props.tasks)
 
     useEffect(() => { 
@@ -28,9 +30,9 @@ function EntryList(props){
             {todaysEntry}
             Total Time Spent Working: {props.minutesCompleted}  
 
-            { Object.entries( props.taskEntryDictionary).map(([task, minutes]) =>{
+            {/* { Object.entries( props.taskEntryDictionary[todaysEntry]).map(([task, minutes]) =>{
                 return (<div> {task}, {minutes} </div> )
-            } )  }
+            } )  } */}
         </div>
     )
 }

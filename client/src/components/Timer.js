@@ -79,7 +79,7 @@ const Timer = (props) => {
         } else { 
             breakCountdown()
         }
-      }, 100);
+      }, 1);
     } 
     
     //BUG POSSIBILITY

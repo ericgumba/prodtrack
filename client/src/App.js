@@ -18,7 +18,7 @@ function App() {
   const REGISTER = "REGISTER"
   const LOGIN = "LOGIN"
 
-
+  // state of app and user's stats
   let [username, setUsername] = useState("")
   let [minutesCompleted, setMinutesCompleted] = useState(0)  
   let [ workDefinition, setWorkDefinition ] = useState(2) 
@@ -129,21 +129,78 @@ function App() {
     }
   }
 
-  // todo: fix this to init or update 
+  // todo: fix this to init or update
+  
+  // {
+//       entry: [ {task, minute}, {}, {} ]
+  // }
+  function print(str){
+    console.log(str)
+  }
+
+  function updateTaskEntryDictionary(task){ 
+    print(taskEntryDictionary)
+
+    // if task is in entry of dictionary
+    let updated = false
+    let updatedTasks = taskEntryDictionary[entry].map( dicTask =>{
+      print("TASK NAME: ")
+      let taskName = Object.keys(dicTask)[0] 
+
+      if (taskName === task){
+        console.log("you got it")
+        let updatedTaskObject = {}
+        updatedTaskObject[task] = dicTask[taskName] + 1
+        console.log(updatedTaskObject)
+        updated = true
+        return updatedTaskObject
+      } else{
+        return dicTask
+      }
+
+
+    } )
+
+    console.log(updated, "WAS TASKET N")
+    
+    if (!updated){ // if not updated then that means new task was entered
+      taskEntryDictionary[entry].push({[task]: 1})
+    } else{
+      taskEntryDictionary[entry] = updatedTasks
+}
+    setTaskEntryDictionary(taskEntryDictionary)
+  }
+
+  function createNewEntry(task){ 
+    let newTaskObject = {}
+    newTaskObject[task] = 1
+    taskEntryDictionary[entry] = [newTaskObject]
+  }
+
+  // todo, finish this abstraction
   function updateStats(){  
     console.log("updating dictionary")
-    if( task){
-      if(taskEntryDictionary[task])
-        taskEntryDictionary[task] = taskEntryDictionary[task] +1
-      else
-        taskEntryDictionary[task] = 1 
-}
-      setTaskEntryDictionary(taskEntryDictionary)
+    let nTask = task
+    if (!task || task === ""){ 
+      setTask('unspecified') 
+      nTask='unspecified' 
+    }
+
+    if (entry){
+      if (taskEntryDictionary.hasOwnProperty(entry)){ 
+        updateTaskEntryDictionary(nTask)
+      } else{  
+        createNewEntry(nTask)
+      }
+    }
+    setTaskEntryDictionary(taskEntryDictionary)
+    
 
 
   }
 
   useEffect( ()=> {  
+    
     screenToBeDisplayed()
   }, [screen,
     timerWorkMinutesLeft,
@@ -152,7 +209,8 @@ function App() {
     timerSecondsLeft,
     timerIsActive,
     workDefinition,
-    breakDefinition
+    breakDefinition,
+    entry
   ] )
 
   useEffect( () =>{
