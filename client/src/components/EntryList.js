@@ -30,9 +30,17 @@ function EntryList(props){
             {todaysEntry}
             Total Time Spent Working: {props.minutesCompleted}  
 
-            {/* { Object.entries( props.taskEntryDictionary[todaysEntry]).map(([task, minutes]) =>{
-                return (<div> {task}, {minutes} </div> )
-            } )  } */}
+            { 
+                props.taskEntryDictionary[todaysEntry] ?
+                props.taskEntryDictionary[todaysEntry].map( dicTask =>{
+                 let taskName = Object.keys(dicTask)[0] 
+                 let totalMinutes = dicTask[taskName]
+                //  console.log(taskName)
+                //  console.log(totalMinutes)
+                return (<div> {taskName}, {totalMinutes} </div> )
+            } ) : null
+        
+        }
         </div>
     )
 }

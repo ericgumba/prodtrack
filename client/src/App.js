@@ -20,8 +20,7 @@ function App() {
 
   // state of app and user's stats
   let [username, setUsername] = useState("")
-  let [minutesCompleted, setMinutesCompleted] = useState( 
-    localStorage.getItem('minutesCompleted') || 0)  
+  let [minutesCompleted, setMinutesCompleted] = useState( 0)  
   let [ workDefinition, setWorkDefinition ] = useState(
     localStorage.getItem('workDefinition') || 1 ) 
   let [ breakDefinition, setBreakDefinition ] = useState(
@@ -31,7 +30,10 @@ function App() {
   let [ entry, setEntry ] = useState(
     localStorage.getItem('entry') || "") 
   const [screen, setScreen] = useState(TIMER)
-  const [taskEntryDictionary, setTaskEntryDictionary] = useState({})
+  const [taskEntryDictionary, setTaskEntryDictionary] = useState(
+    JSON.parse(localStorage.getItem('taskEntryDictionary')) || 
+    {}
+    )
   const [totalWork, setTotalWork] = useState([taskEntryDictionary])
 
   
@@ -47,7 +49,24 @@ function App() {
     localStorage.getItem('timerIsInWorkMode') || true)
   const [timerIsActive, setTimerIsActive] = useState(
     localStorage.getItem('timerIsActive') || false)
-  
+
+
+  function save(){
+    localStorage.setItem('timerIsActive', timerIsActive)
+    localStorage.setItem('timerIsInWorkMode', timerIsInWorkMode)
+    localStorage.setItem('timerBreakMinutesLeft', timerBreakMinutesLeft)
+    localStorage.setItem('timerSecondsLeft', timerSecondsLeft)
+    localStorage.setItem('timerWorkMinutesLeft', timerWorkMinutesLeft)
+    localStorage.setItem('entry', entry)
+    localStorage.setItem('task', task)
+    localStorage.setItem('breakDefinition', breakDefinition)
+    localStorage.setItem('workDefinition', workDefinition)
+    localStorage.setItem('minutesCompleted', parseInt(minutesCompleted))
+//     localStorage.setItem('user', JSON.stringify(user));   
+// var user = JSON.parse(localStorage.getItem('user')); 
+    localStorage.setItem('taskEntryDictionary', JSON.stringify(taskEntryDictionary))
+  }
+
   function createSettings(){
 
     //TODO pass in timer state to reset values
@@ -189,8 +208,9 @@ function App() {
   }
 
   // todo, finish this abstraction
-  function updateStats(){  
-    console.log("updating dictionary")
+  function updateStats(){   
+
+
     let nTask = task
     if (!task || task === ""){ 
       setTask('unspecified') 
@@ -215,8 +235,10 @@ function App() {
   }
 
   useEffect( ()=> {  
+
     
     screenToBeDisplayed()
+    save()
   }, [screen,
     timerWorkMinutesLeft,
     timerBreakMinutesLeft,
@@ -229,10 +251,12 @@ function App() {
   ] )
 
   useEffect( () =>{
-    console.log('hey there dog man')
+    console.log('hey there dog man', console.log(minutesCompleted))
+    if (minutesCompleted > 0){
     updateStats()
     updateTotal()
     screenToBeDisplayed()
+    save()}
   }, [minutesCompleted] )
  
   return (

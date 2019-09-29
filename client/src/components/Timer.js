@@ -7,6 +7,7 @@ const Timer = (props) => {
   const [seconds, setSeconds] = useState(props.timerSecondsLeft)
   const [isActive, setIsActive] = useState(false) 
   const [isWorking, setIsWorking] = useState(props.timerIsInWorkMode) 
+  const [task, setTask] = useState(props.task)
   function toggle() {
     setIsActive(!isActive)
     props.setTimerIsActive(!props.timerIsActive);
@@ -27,7 +28,7 @@ const Timer = (props) => {
 
       props.setTimerIsInWorkMode(false) 
       props.setTimerWorkMinutesLeft(props.workDefinition)  
-      props.setMinutesCompleted(props.minutesCompleted+1) 
+      props.setMinutesCompleted(parseInt(props.minutesCompleted)+1) 
       tick(0)
     }
     else if (seconds <= 0  ){  
@@ -35,7 +36,7 @@ const Timer = (props) => {
       props.setTimerWorkMinutesLeft(props.timerWorkMinutesLeft - 1) 
 
       if ( props.timerWorkMinutesLeft !== props.workDefinition )
-      props.setMinutesCompleted(props.minutesCompleted+1) 
+      props.setMinutesCompleted(parseInt( props.minutesCompleted)+1) 
  
 
     }
@@ -79,7 +80,7 @@ const Timer = (props) => {
         } else { 
             breakCountdown()
         }
-      }, 1);
+      }, 1000);
     } 
     
     //BUG POSSIBILITY
@@ -92,6 +93,11 @@ const Timer = (props) => {
 
   //todo add form that sets task.
   // bug possibility: may reset timer somehow. 
+
+  function updateTask(value){
+    setTask(value)
+    props.setTask(value)
+  }
 
   return (
     <div className="app">
@@ -106,7 +112,7 @@ const Timer = (props) => {
  
       </div> 
           <h1> Input your task here </h1>
-        <Form.Control size="lg" type="text" placeholder="Large text" onChange={(e) => {props.setTask(e.target.value)}} /> 
+        <Form.Control size="lg" type="text" placeholder="Large text" value={task} onChange={(e) => {updateTask(e.target.value)}} /> 
     </div>
   );
 };
