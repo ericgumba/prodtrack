@@ -32,12 +32,11 @@ function App() {
     let todaysEntry = new Date()
     todaysEntry = todaysEntry.getFullYear() + '-' + (todaysEntry.getMonth() + 1) + '-' + todaysEntry.getDate();
 
-  let [ entry, setEntry ] = useState(
-    localStorage.getItem('entry') || todaysEntry ) 
+  let [ entry, setEntry ] = useState( todaysEntry ) 
   const [screen, setScreen] = useState(TIMER)
   const [taskEntryDictionary, setTaskEntryDictionary] = useState(
     JSON.parse(localStorage.getItem('taskEntryDictionary')) || 
-    {} // { entry: String, tasks: [ { title:String, minutesWorked:Number } ] }
+    { entry: entry, tasks: [] } // { entry: String, tasks: [ { title:String, minutesWorked:Number } ] }
     )
   const [totalWork, setTotalWork] = useState(    
     JSON.parse(localStorage.getItem('totalWork')) || 
@@ -217,7 +216,6 @@ function App() {
   function updateTaskEntryDictionary(task){  
 
     let updated = false
-    let indexOfEntry = getIndexOfEntry()
     let updatedTasks = taskEntryDictionary.tasks.map( dicTask =>{
     console.log("TASK NAME: ") 
  // { entry: String, tasks: [ { title:String, minutesWorked:Number } ] }
@@ -239,10 +237,22 @@ function App() {
     setTaskEntryDictionary(taskEntryDictionary)
   }
 
-
+  function taskInEntry(){
+    let res = false
+    taskEntryDictionary.tasks.map( task => {
+      if (task.title === task){
+        res = true
+      }
+      return task
+    } )
+    return res
+  }
   // todo, finish this abstraction
   function updateStats(){   
+    let now = new Date()
+    now = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
 
+    setEntry(now)
 
     let nTask = task
     if (!task || task === ""){ 
@@ -252,10 +262,15 @@ function App() {
 
     // entry is always a thing 
 
-    if (entry){
+    // case 1: taskEntryDictionary doesn't countain current date e.g 12 AM
+    if (taskEntryDictionary.entry !== now){
+      createNewEntry(nTask)
+    }
+
+    else if ( taskInEntry(nTask) ){
         updateTaskEntryDictionary(nTask)
       } else{  
-        createNewEntry(nTask)
+        updateTaskEntryDictionary(nTask)
       }
      
     
@@ -266,12 +281,14 @@ function App() {
   function updateTotalWork(){
 
     let ind = getIndexOfEntry() 
-    if ( ind === -1 ){
-      totalWork.entries.push(taskEntryDictionary)
-    } else {
-      totalWork.entries[ind] = taskEntryDictionary
-    }
 
+    if (taskEntryDictionary){
+      if ( ind === -1 ){
+        totalWork.entries.push(taskEntryDictionary)
+      } else {
+        totalWork.entries[ind] = taskEntryDictionary
+      }
+    }
     setTotalWork(totalWork)
   }
 
