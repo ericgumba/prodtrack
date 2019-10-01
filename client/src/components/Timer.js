@@ -80,7 +80,7 @@ const Timer = (props) => {
         } else { 
             breakCountdown()
         }
-      }, 1000);
+      }, 10);
     } 
     
     //BUG POSSIBILITY

@@ -14,21 +14,32 @@ function EntryList(props){
 
     props.setEntry(todaysEntry)
 
-    const [task, setTask] = useState(props.tasks)
+    // const [task, setTask] = useState(props.tasks)
 
-    useEffect(() => { 
+    // useEffect(() => { 
 
-        console.log("changed prop")
-        setTask(props.task)
+    //     console.log("changed prop")
+    //     setTask(props.task)
 
-    },[ props.task]) 
+    // },[ props.task]) 
+
+
+    let totalMinutes = 0
+    if ( 
+        props.taskEntryDictionary[todaysEntry] )
+    props.taskEntryDictionary[todaysEntry].map( dicTask =>{ 
+        let taskName = Object.keys(dicTask)[0] 
+        let taskMinutes = dicTask[taskName] 
+        totalMinutes += taskMinutes 
+        return dicTask
+   } )
  
   
 
     return(
         <div>
             {todaysEntry}
-            Total Time Spent Working: {props.minutesCompleted}  
+            Total Time Spent Working: {totalMinutes}  
 
             { 
                 props.taskEntryDictionary[todaysEntry] ?

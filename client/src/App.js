@@ -27,14 +27,34 @@ function App() {
     localStorage.getItem('breakDefinition') || 0)  
   let [ task, setTask ] = useState(
     localStorage.getItem('task') || "") 
+
+
+    let todaysEntry = new Date()
+    todaysEntry = todaysEntry.getFullYear() + '-' + (todaysEntry.getMonth() + 1) + '-' + todaysEntry.getDate();
+
   let [ entry, setEntry ] = useState(
-    localStorage.getItem('entry') || "") 
+    localStorage.getItem('entry') || todaysEntry ) 
   const [screen, setScreen] = useState(TIMER)
   const [taskEntryDictionary, setTaskEntryDictionary] = useState(
     JSON.parse(localStorage.getItem('taskEntryDictionary')) || 
-    {}
+    {} // { entry: String, tasks: [ { title:String, minutesWorked:Number } ] }
     )
-  const [totalWork, setTotalWork] = useState([taskEntryDictionary])
+  const [totalWork, setTotalWork] = useState(    
+    JSON.parse(localStorage.getItem('totalWork')) || 
+   { entries: 
+    [
+     { entry: "2019-9-28", 
+       tasks: 
+       [ 
+         {
+          title: "wow", 
+          minutesWorked:4
+         } 
+       ] 
+     }
+    ]
+  }
+    )
 
   
   
@@ -48,7 +68,7 @@ function App() {
   const [timerIsInWorkMode, setTimerIsInWorkMode ] = useState(
     localStorage.getItem('timerIsInWorkMode') || true)
   const [timerIsActive, setTimerIsActive] = useState(
-    localStorage.getItem('timerIsActive') || false)
+  localStorage.getItem('timerIsActive') || false)
 
 
   function save(){
@@ -65,6 +85,7 @@ function App() {
 //     localStorage.setItem('user', JSON.stringify(user));   
 // var user = JSON.parse(localStorage.getItem('user')); 
     localStorage.setItem('taskEntryDictionary', JSON.stringify(taskEntryDictionary))
+    localStorage.setItem('totalWork', JSON.stringify(totalWork))
   }
 
   function createSettings(){
@@ -85,7 +106,9 @@ function App() {
   }
   function createStats(){
     return (
-      <Stats>
+      <Stats
+      totalWork={totalWork}
+      >
 
       </Stats>
     )
@@ -158,82 +181,7 @@ function App() {
       setScreenDisplayed(createLogin())
     }
   }
-
-  // todo: fix this to init or update
-  
-  // {
-//       entry: [ {task, minute}, {}, {} ]
-  // }
-  function print(str){
-    console.log(str)
-  }
-
-  function updateTaskEntryDictionary(task){ 
-    print(taskEntryDictionary)
-
-    // if task is in entry of dictionary
-    let updated = false
-    let updatedTasks = taskEntryDictionary[entry].map( dicTask =>{
-      print("TASK NAME: ")
-      let taskName = Object.keys(dicTask)[0] 
-
-      if (taskName === task){
-        console.log("you got it")
-        let updatedTaskObject = {}
-        updatedTaskObject[task] = dicTask[taskName] + 1
-        console.log(updatedTaskObject)
-        updated = true
-        return updatedTaskObject
-      } else{
-        return dicTask
-      }
-
-
-    } )
-
-    console.log(updated, "WAS TASKET N")
-    
-    if (!updated){ // if not updated then that means new task was entered
-      taskEntryDictionary[entry].push({[task]: 1})
-    } else{
-      taskEntryDictionary[entry] = updatedTasks
-}
-    setTaskEntryDictionary(taskEntryDictionary)
-  }
-
-  function createNewEntry(task){ 
-    let newTaskObject = {}
-    newTaskObject[task] = 1
-    taskEntryDictionary[entry] = [newTaskObject]
-  }
-
-  // todo, finish this abstraction
-  function updateStats(){   
-
-
-    let nTask = task
-    if (!task || task === ""){ 
-      setTask('unspecified') 
-      nTask='unspecified' 
-    }
-
-    if (entry){
-      if (taskEntryDictionary.hasOwnProperty(entry)){ 
-        updateTaskEntryDictionary(nTask)
-      } else{  
-        createNewEntry(nTask)
-      }
-    }
-    setTaskEntryDictionary(taskEntryDictionary)
-    
-
-
-  }
-
-  function updateTotal(){
-
-  }
-
+ 
   useEffect( ()=> {  
 
     
@@ -250,13 +198,94 @@ function App() {
     entry
   ] )
 
-  useEffect( () =>{
-    console.log('hey there dog man', console.log(minutesCompleted))
+  function createNewTask(task){ 
+    return {title:task, minutesWorked: 1}
+  }
+  function createNewEntry(task){  
+    setTaskEntryDictionary ({ entry:todaysEntry, tasks: [createNewTask(task)]} )
+  }
+
+  function getIndexOfEntry(){
+    let index = -1
+    totalWork.entries.map( (ent, i) => {
+      if (entry === ent.entry) index = i
+      return ent
+    })
+    return index
+  }
+
+  function updateTaskEntryDictionary(task){  
+
+    let updated = false
+    let indexOfEntry = getIndexOfEntry()
+    let updatedTasks = taskEntryDictionary.tasks.map( dicTask =>{
+    console.log("TASK NAME: ") 
+ // { entry: String, tasks: [ { title:String, minutesWorked:Number } ] }
+    if (dicTask.title === task){ 
+      updated = true
+      return {title: dicTask.title, minutesWorked: dicTask.minutesWorked+1 }
+    } else{
+      return dicTask
+    }
+
+
+    } ) 
+    
+    if (!updated){ // if not updated then that means new task was entered
+      taskEntryDictionary.tasks.push( createNewTask(task))
+    } else{
+      taskEntryDictionary.tasks = updatedTasks
+    }
+    setTaskEntryDictionary(taskEntryDictionary)
+  }
+
+
+  // todo, finish this abstraction
+  function updateStats(){   
+
+
+    let nTask = task
+    if (!task || task === ""){ 
+      setTask('unspecified')   
+      nTask='unspecified' 
+    }
+
+    // entry is always a thing 
+
+    if (entry){
+        updateTaskEntryDictionary(nTask)
+      } else{  
+        createNewEntry(nTask)
+      }
+     
+    
+
+
+  }
+
+  function updateTotalWork(){
+
+    let ind = getIndexOfEntry() 
+    if ( ind === -1 ){
+      totalWork.entries.push(taskEntryDictionary)
+    } else {
+      totalWork.entries[ind] = taskEntryDictionary
+    }
+
+    setTotalWork(totalWork)
+  }
+
+
+  useEffect( () =>{ 
     if (minutesCompleted > 0){
-    updateStats()
-    updateTotal()
-    screenToBeDisplayed()
-    save()}
+      updateStats()
+      updateTotalWork()
+      screenToBeDisplayed()
+      save()
+
+      console.log(taskEntryDictionary)
+      console.log(totalWork)
+  }
   }, [minutesCompleted] )
  
   return (
