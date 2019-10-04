@@ -19,6 +19,7 @@ function App() {
   const LOGIN = "LOGIN"
 
   // state of app and user's stats
+  //local storage this
   let [username, setUsername] = useState("")
   let [minutesCompleted, setMinutesCompleted] = useState( 0)  
   let [ workDefinition, setWorkDefinition ] = useState(
@@ -42,15 +43,7 @@ function App() {
     JSON.parse(localStorage.getItem('totalWork')) || 
    { entries: 
     [
-     { entry: "2019-9-28", 
-       tasks: 
-       [ 
-         {
-          title: "wow", 
-          minutesWorked:4
-         } 
-       ] 
-     }
+     taskEntryDictionary
     ]
   }
     )
@@ -69,6 +62,74 @@ function App() {
   const [timerIsActive, setTimerIsActive] = useState(
   localStorage.getItem('timerIsActive') || false)
 
+
+  function register(username, password){
+    fetch("http://localhost:3000/register", {
+      method: 'post',
+      body:JSON.stringify( { username: username, password: password, entries: totalWork.entries } )
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      setUsername(data.username) 
+
+    }
+    ); 
+  }
+
+  // register() 
+
+  function resetTimer(){
+    setWorkDefinition(25)
+    setBreakDefinition(5)
+    setMinutesCompleted(0)
+    setTimerWorkMinutesLeft(25)
+    setTimerBreakMinutesLeft(5)
+    setTimerSecondsLeft(0)
+  }
+  
+  function login(username, password){
+
+    if (username){
+    fetch('http://localhost:3000/login', {
+      method: 'post',
+      body: JSON.stringify({username: username, password: password})
+    })
+    .then(response => response.json())
+    .then(data =>  {
+
+      console.log("DATAR", data)
+      setUsername(data.username)
+      totalWork.entries = data.entries
+      setTotalWork(totalWork)
+      resetTimer() 
+      save()  
+    }
+      )}
+
+  }
+
+  function logout(){
+    setUsername("")
+    resetTimer()
+  }
+
+  function updateUser(){
+
+    if(username){
+      fetch('http://localhost:3000/update', {
+        method: 'post',
+        body: JSON.stringify({username: username, entries: totalWork.entries })
+      })
+      .then(response => response.json())
+      .then(data =>  {
+
+        console.log("DATAR", data) 
+      }
+        )
+    }
+
+  }
 
   function save(){
     localStorage.setItem('timerIsActive', timerIsActive)
@@ -151,7 +212,9 @@ function App() {
 
     function createLogin(){
       return (
-        <Login></Login>
+        <Login
+        login={login}
+        ></Login>
       )
     }
 
@@ -159,7 +222,21 @@ function App() {
 
 
     const [screenDisplayed, setScreenDisplayed] = useState(createTimer())
+    const [header, setHeader] = useState(<Navbar setScreen={setScreen}></Navbar>)   
+    function updateHeader(){
+      if (username){
+            
+        setHeader(<Navbar
+        setScreen={setScreen}
+        logout={logout}
 
+        ></Navbar>) 
+      }else {
+        setHeader(<Navbar
+          setScreen={setScreen}
+          ></Navbar>)
+      }
+    }
 
     function screenToBeDisplayed(){ 
       if (screen === TIMER){
@@ -196,6 +273,10 @@ function App() {
     breakDefinition,
     entry
   ] )
+
+  useEffect( ()=>{
+    updateHeader()
+  }, [username] )
 
   function createNewTask(task){ 
     return {title:task, minutesWorked: 1}
@@ -299,6 +380,7 @@ function App() {
       updateTotalWork()
       screenToBeDisplayed()
       save()
+      updateUser()
 
       console.log(taskEntryDictionary)
       console.log(totalWork)
@@ -306,11 +388,8 @@ function App() {
   }, [minutesCompleted] )
  
   return (
-    <div className="App"> 
-
-    <Navbar
-    setScreen={setScreen}
-    ></Navbar> 
+    <div className="App">
+      {header}
     {screenDisplayed} 
  
 

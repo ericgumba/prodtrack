@@ -5,20 +5,30 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 
 function Register(props){
+
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+
+    function attemptLogin(e){
+        e.preventDefault()
+        console.log("USE AND PASS", {username, password})
+        props.login(username, password) 
+    }
+
     return (<Form>
     <Form.Group controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
+        <Form.Control type="email" placeholder="Enter email" onChange={(e) => setUsername(e.target.value)} />
         <Form.Text className="text-muted"> 
         </Form.Text>
     </Form.Group>
 
     <Form.Group controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
+        <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
     </Form.Group>  
 
-    <Button variant="primary" type="submit">
+  <Button variant="primary" type="submit" onClick={(e) => attemptLogin(e)} >
         Login
     </Button>
     </Form>

@@ -56,25 +56,41 @@ exports.edit_task = ( req, res , next ) => {
     } )
 }
 
+exports.user_update = ( req, res , next ) => {
+    User.findOne( { username: req.body.username }, (err, user) => {
+
+        console.log("Being updated:", user)
+        user.entries = req.body.entries
+
+        user.save((err, newUser) => {
+            res.send(newUser);
+        })
+        
+    } )
+}
+
 exports.user_create = ( req, res, next ) => {
+
+    console.log("DOG MAN ARF ARF", req.body)
  
     // create new user object~ 
     let user = new User(
         {
             username: req.body.username,
             password: req.body.password,
-            email: req.body.email,
             entries: []
         }
     ) 
 
+    console.log("USEROO", user)
+
     user.save( (err) => {
         if ( err ){ 
             // console.log("HERE IS ERR≥>OR:  ", err)
-             res.status(404).send('Sorry, we cannot find that!')
+             res.status(404).send({msg:"cannot register that user", success:false})
             }
 
-        res.send("User registered.")
+        res.send({msg:"user registered", success:true})
 
  
     })
@@ -82,6 +98,7 @@ exports.user_create = ( req, res, next ) => {
  
 
 exports.user_login = (req, res, next) =>{
+    console.log("RERA", req.body)
     User.findOne(
         {
             username: req.body.username,
@@ -94,7 +111,7 @@ exports.user_login = (req, res, next) =>{
                 res.send({msg:"Incorrect username or password"})
             }
 
-            res.send({msg:doc})
+            res.send(doc)
         })
         .catch( (err) => { 
             res.send({msg:"NOT OK"})
@@ -122,15 +139,6 @@ exports.task_create = (req, res, next) =>{
             res.send(newUser)
         })
     } ) 
-}
-
-exports.test_query = (req, res, next) =>{
-    const doc =  User.findOne({username: "e"}, (err, username) => {
-
-        let z = grabEntry(username.entries, "fmoney" )
-
-        res.send(z) 
-        })
 }
 
 exports.delete_task = (req, res, next) => {

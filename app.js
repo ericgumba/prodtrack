@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const cors = require('cors'); // addition we make 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 //Import the mongoose module
@@ -27,10 +27,13 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use( cors() )
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.json({
+  type: ['application/json', 'text/plain']
+}))
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

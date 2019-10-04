@@ -9,7 +9,8 @@ router.get('/', function(req, res, next) {
 
 router.post('/register', user_controller.user_create )
 
-router.get('/login', user_controller.user_login)
+router.post('/login', user_controller.user_login)
+router.post('/update', user_controller.user_update)
 
 router.post('/create-entry', user_controller.entry_create)
 
