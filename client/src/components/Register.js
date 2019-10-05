@@ -5,10 +5,17 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 
 function Register(props){
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("") 
+    function attemptRegister(e){
+        e.preventDefault()
+        console.log("USE AND PASS", {username, password})
+        props.register(username, password) 
+    }
     return (<Form>
     <Form.Group controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
+        <Form.Control type="email" placeholder="Enter email" onChange={(e) => setUsername(e.target.value)}/>
         <Form.Text className="text-muted">
         We'll never share your email with anyone else.
         </Form.Text>
@@ -16,15 +23,11 @@ function Register(props){
 
     <Form.Group controlId="formBasicPassword">
         <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
+        <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
     </Form.Group> 
+ 
 
-    <Form.Group controlId="formReenterPassword">
-        <Form.Label>Re-enter Password</Form.Label>
-        <Form.Control type="password" placeholder="Re-eneter Password" />
-    </Form.Group> 
-
-    <Button variant="primary" type="submit">
+    <Button variant="primary" type="submit" onClick={(e) => attemptRegister(e)}>
         Register
     </Button>
     </Form>)

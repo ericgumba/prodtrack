@@ -9,6 +9,7 @@ import Login from './components/Login'
 import EntryList from './components/EntryList'
 import Settings from './components/Settings'
 import Stats from './components/Stats'
+ 
 
 function App() {
 
@@ -20,7 +21,8 @@ function App() {
 
   // state of app and user's stats
   //local storage this
-  let [username, setUsername] = useState("")
+  let [username, setUsername] = useState(
+    localStorage.getItem('username') || "")
   let [minutesCompleted, setMinutesCompleted] = useState( 0)  
   let [ workDefinition, setWorkDefinition ] = useState(
     localStorage.getItem('workDefinition') || 1 ) 
@@ -70,11 +72,17 @@ function App() {
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
-      setUsername(data.username) 
+      console.log("DATUM fROM REGISTER", data)
+      if ( data.msg ){
+        alert("Username already exists")
+      } else {
+        setUsername(data.username) 
+        setScreenDisplayed( createTimer() )
+        setScreen( TIMER )
 
-    }
-    ); 
+        console.log(username)
+      }
+    }); 
   }
 
   // register() 
@@ -99,23 +107,38 @@ function App() {
     .then(data =>  {
 
       console.log("DATAR", data)
-      setUsername(data.username)
-      totalWork.entries = data.entries
-      setTotalWork(totalWork)
-      resetTimer() 
-      save()  
+
+      if (data.msg){
+        alert("incorrect name")
+      }else{
+        setUsername(data.username)
+        totalWork.entries = data.entries 
+        setTotalWork(totalWork)
+        if (getIndexOfEntry() >= 0){
+          setTaskEntryDictionary(totalWork.entries[getIndexOfEntry()] )}
+        resetTimer() 
+        setScreenDisplayed( createTimer() )
+        setScreen( TIMER )
+        save()  
+    }
     }
       )}
 
   }
 
   function logout(){
+    totalWork.entries = []
+    setTotalWork(totalWork)
+    setTaskEntryDictionary({ entry: entry, tasks: [] })
     setUsername("")
     resetTimer()
+    setScreenDisplayed( createTimer() )
+    setScreen( TIMER )
   }
 
   function updateUser(){
 
+    console.log("YODATUNG YSERNANE", username)
     if(username){
       fetch('http://localhost:3000/update', {
         method: 'post',
@@ -142,7 +165,7 @@ function App() {
     localStorage.setItem('breakDefinition', breakDefinition)
     localStorage.setItem('workDefinition', workDefinition)
     localStorage.setItem('minutesCompleted', parseInt(minutesCompleted))
-//     localStorage.setItem('user', JSON.stringify(user));   
+    localStorage.setItem('username', username);   
 // var user = JSON.parse(localStorage.getItem('user')); 
     localStorage.setItem('taskEntryDictionary', JSON.stringify(taskEntryDictionary))
     localStorage.setItem('totalWork', JSON.stringify(totalWork))
@@ -251,7 +274,7 @@ function App() {
       setScreenDisplayed( createStats() )
     }
     else if (screen === REGISTER){ 
-      setScreenDisplayed(<Register></Register>)
+      setScreenDisplayed(<Register register={register} ></Register>)
     }
     else if (screen === LOGIN){
       setScreenDisplayed(createLogin())
@@ -359,6 +382,30 @@ function App() {
 
   }
 
+  function removeDuplicatesFromTotalWork(){
+    // myObj.hasOwnProperty('key')
+
+    let set = new Set()
+
+    let debuggedEntries = totalWork.entries.filter( ent => {
+      
+      if (set.has(ent.entry)) return false 
+      else {
+        set.add(ent.entry)
+        return true
+      }  
+       
+    })
+
+
+
+    console.log("new workout plan", debuggedEntries)
+
+    totalWork.entries = debuggedEntries
+
+    setTotalWork(totalWork)
+  }
+
   function updateTotalWork(){
 
     let ind = getIndexOfEntry() 
@@ -378,6 +425,7 @@ function App() {
     if (minutesCompleted > 0){
       updateStats()
       updateTotalWork()
+      removeDuplicatesFromTotalWork() // hacking a bug
       screenToBeDisplayed()
       save()
       updateUser()

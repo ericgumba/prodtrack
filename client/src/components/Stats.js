@@ -46,6 +46,8 @@ function Stats(props) {
     return (
         <div>  
 
+           { page === 0 ? "All Time" : props.totalWork.entries[page-1].entry}
+
             {ret}
             current page: {page}
             <Button onClick={() => setPage( Math.max(page-1, 0 ) ) } > Prev </Button>

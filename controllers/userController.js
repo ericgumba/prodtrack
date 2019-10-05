@@ -1,60 +1,60 @@
 var User = require('../models/user') 
-var Task = require('../models/task')
-var Entry = require('../models/entry')
+// var Task = require('../models/task')
+// var Entry = require('../models/entry')
 // register user
  
 
-function grabTask(tasks, taskName){
-    for ( let task of tasks ) {
-        if ( task.name == taskName ) {
-            return task
-        }
-    }
-}
+// function grabTask(tasks, taskName){
+//     for ( let task of tasks ) {
+//         if ( task.name == taskName ) {
+//             return task
+//         }
+//     }
+// }
 
 
-function grabEntry(entries, entryTitle){
-    for (let entry of entries){
-        if (entry.title == entryTitle) {
-            return entry
-        }
-    }
-}
+// function grabEntry(entries, entryTitle){
+//     for (let entry of entries){
+//         if (entry.title == entryTitle) {
+//             return entry
+//         }
+//     }
+// }
  
 
-exports.update_task = ( req, res, next ) => {
+// exports.update_task = ( req, res, next ) => {
 
-    User.findOne( {username: req.body.username}, (err, user) => {
+//     User.findOne( {username: req.body.username}, (err, user) => {
 
-        if(err){
-            res.send(err)
-        }
+//         if(err){
+//             res.send(err)
+//         }
  
-        let entry = grabEntry(user.entries, req.body.entryTitle) 
-        let task = grabTask(entry.tasks, req.body.taskName)
-        task.minutesComplete = req.body.minutesComplete
-        user.save((err, newUser) => { 
-            res.send(newUser)
-        })
-    } )
-}
+//         let entry = grabEntry(user.entries, req.body.entryTitle) 
+//         let task = grabTask(entry.tasks, req.body.taskName)
+//         task.minutesComplete = req.body.minutesComplete
+//         user.save((err, newUser) => { 
+//             res.send(newUser)
+//         })
+//     } )
+// }
 
-exports.edit_task = ( req, res , next ) => {
-    User.findOne( { username: req.body.username }, (err, user) => {
+// exports.edit_task = ( req, res , next ) => {
+//     User.findOne( { username: req.body.username }, (err, user) => {
  
         
-        let entry = grabEntry(user.entries, req.body.entryTitle) 
-        let task = grabTask(entry.tasks, req.body.taskName)
+//         let entry = grabEntry(user.entries, req.body.entryTitle) 
+//         let task = grabTask(entry.tasks, req.body.taskName)
 
-        console.log( { user, entry, task } )
-        task.name = req.body.newName
+//         console.log( { user, entry, task } )
+//         task.name = req.body.newName
 
-        user.save((err, newUser) => {
-            res.send(newUser);
-        })
+//         user.save((err, newUser) => {
+//             res.send(newUser);
+//         })
         
-    } )
-}
+//     } )
+// }
 
 exports.user_update = ( req, res , next ) => {
     User.findOne( { username: req.body.username }, (err, user) => {
@@ -78,19 +78,19 @@ exports.user_create = ( req, res, next ) => {
         {
             username: req.body.username,
             password: req.body.password,
-            entries: []
+            entries: req.body.entries
         }
     ) 
 
     console.log("USEROO", user)
 
-    user.save( (err) => {
+    user.save( (err, prod) => {
         if ( err ){ 
-            // console.log("HERE IS ERR≥>OR:  ", err)
+            console.log("HERE IS ERR≥>OR:  ", err)
              res.status(404).send({msg:"cannot register that user", success:false})
             }
 
-        res.send({msg:"user registered", success:true})
+        res.send(prod)
 
  
     })
@@ -120,79 +120,79 @@ exports.user_login = (req, res, next) =>{
 
 
 // TODO Finish this function
-exports.task_create = (req, res, next) =>{   
-    let newTask = new Task(
-        {
-            name: req.body.taskName,
-            minutesComplete: 0
-        }
-    )  
-    User.findOne( {username: req.body.username}, (err, user) => {
+// exports.task_create = (req, res, next) =>{   
+//     let newTask = new Task(
+//         {
+//             name: req.body.taskName,
+//             minutesComplete: 0
+//         }
+//     )  
+//     User.findOne( {username: req.body.username}, (err, user) => {
 
-        if(err){
-            res.send(err)
-        }
+//         if(err){
+//             res.send(err)
+//         }
  
-        let entry = grabEntry(user.entries, req.body.entryTitle) 
-        entry.tasks.push(newTask)
-        user.save((err, newUser) => { 
-            res.send(newUser)
-        })
-    } ) 
-}
+//         let entry = grabEntry(user.entries, req.body.entryTitle) 
+//         entry.tasks.push(newTask)
+//         user.save((err, newUser) => { 
+//             res.send(newUser)
+//         })
+//     } ) 
+// }
 
-exports.delete_task = (req, res, next) => {
+// exports.delete_task = (req, res, next) => {
 
-    console.log(req.body.username)
+//     console.log(req.body.username)
 
-    if (req.body.username === undefined) res.send("UNDEFINED USERNAME")
-    User.findOne( {username: req.body.username}, (err, user) => {
+//     if (req.body.username === undefined) res.send("UNDEFINED USERNAME")
+//     User.findOne( {username: req.body.username}, (err, user) => {
 
-        console.log("TESTESTESTSET")
+//         console.log("TESTESTESTSET")
 
-        if(err){
-            res.send(err)
-        }
+//         if(err){
+//             res.send(err)
+//         }
 
-        let entry = grabEntry( user.entries, req.body.entryTitle )
+//         let entry = grabEntry( user.entries, req.body.entryTitle )
 
-        entry.tasks = entry.tasks.filter( ( task ) => { 
-            return task.name != req.body.taskName
-        } )
+//         entry.tasks = entry.tasks.filter( ( task ) => { 
+//             return task.name != req.body.taskName
+//         } )
 
-        console.log(entry.tasks)
+//         console.log(entry.tasks)
 
-        user.save( (err, prod) =>{ 
-            res.send(prod)
-        }) 
+//         user.save( (err, prod) =>{ 
+//             res.send(prod)
+//         }) 
 
-    } )
-}
+//     } )
+// }
 
-exports.entry_create = (req, res, next) => {
+// exports.entry_create = (req, res, next) => {
 
-    let newEntry = new Entry
-    (
-        {
-            title: req.body.title,
-            tasks: []
-        }
-    )
+//     let newEntry = new Entry
+//     (
+//         {
+//             title: req.body.title,
+//             tasks: []
+//         }
+//     )
 
-    const doc =  User.findOne({username: req.body.username}, (err, username) => {
+//     const doc =  User.findOne({username: req.body.username}, (err, username) => {
 
-        if (err){
-            res.send(err)
-        }
+//         if (err){
+//             res.send(err)
+//         }
          
-        username.entries.push(newEntry)
+//         username.entries.push(newEntry)
         
-        var subdoc = username.entries[username.entries.length -1 ]
+//         var subdoc = username.entries[username.entries.length -1 ]
          
-        username.save( (err, prod) =>{ 
-            res.send(prod)
-        }) 
-    })
-}
+//         username.save( (err, prod) =>{ 
+//             res.send(prod)
+//         }) 
+//     })
+// }
 
  

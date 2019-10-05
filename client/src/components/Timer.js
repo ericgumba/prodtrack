@@ -31,7 +31,7 @@ const Timer = (props) => {
       props.setMinutesCompleted(parseInt(props.minutesCompleted)+1) 
       tick(0)
     }
-    else if (seconds <= 0  ){  
+    else if ( seconds <= 0  ){  
       tick(59)
       props.setTimerWorkMinutesLeft(props.timerWorkMinutesLeft - 1) 
 
@@ -80,7 +80,7 @@ const Timer = (props) => {
         } else { 
             breakCountdown()
         }
-      }, 10);
+      }, 100);
     } 
     
     //BUG POSSIBILITY

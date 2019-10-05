@@ -11,17 +11,24 @@ function Navbar(props) {
   const REGISTER = "REGISTER"
   const LOGIN = "LOGIN"
 
+  let inOrOut = <Nav.Link onClick={ () => {props.setScreen(LOGIN)} }>Login</Nav.Link>
+
+  if (props.logout){
+    inOrOut = <Nav.Link onClick={ () => {props.logout() } }>Logout</Nav.Link>
+
+    
+  }
     return ( 
     <Nav
         activeKey="/home"
         onSelect={selectedKey => alert(`selected ${selectedKey}`)}
       >
         <Nav.Item>
-          <Nav.Link onClick={ () => {props.setScreen(LOGIN)} }>Login</Nav.Link>
+          {inOrOut}
         </Nav.Item>
-        <Nav.Item>
+{        props.logout ? null : <Nav.Item>
           <Nav.Link onClick={ () => {props.setScreen(REGISTER)} }>Register</Nav.Link>
-        </Nav.Item>
+        </Nav.Item>}
         <Nav.Item>
           <Nav.Link onClick={ () => {props.setScreen(STATS)} }>Stats</Nav.Link>
         </Nav.Item>
