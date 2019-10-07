@@ -41,9 +41,16 @@ function EntryList(props){
    }
  
   
+   function computePomodorosCompleted(mins){
+    let pomodoros = parseInt( mins/props.workDefinition )
 
+    return pomodoros
+}
+    // todo: progress bar
     return(
-        <div> 
+        <div className="EntryList">
+            <h1> 
+            Today's Date: {todaysEntry} </h1> 
             <div>
                 <h2>
 
@@ -68,7 +75,7 @@ function EntryList(props){
                 props.taskEntryDictionary.tasks.map( (dicTask, i) =>{
                  let taskName = Object.keys(dicTask)[0] 
                  let totalMinutes = dicTask[taskName] 
-                return (<tr> <td> {i} </td> <td>{dicTask.title} </td> <td> { computeTime( dicTask.minutesWorked )} </td> <td> pomodoros </td>  </tr> )
+                return (<tr> <td> {i} </td> <td>{dicTask.title} </td> <td> { computeTime( dicTask.minutesWorked )} </td> <td> {computePomodorosCompleted(dicTask.minutesWorked)} </td>  </tr> )
             } ) : null
         
         } 

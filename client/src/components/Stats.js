@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table'
 
 // todo: implement stats
 function Stats(props) {
@@ -23,35 +24,61 @@ function Stats(props) {
         return res
 
     }
+    function computeTime(mins){
+        let hours = parseInt(mins / 60)
+        let minutes = mins % 60
+ 
+        return ` ${hours} hours and ${minutes} minutes `
+    }
+    function computePomodorosCompleted(mins){
+        let pomodoros = parseInt( mins/props.workDefinition )
 
-    const [page, setPage] = useState(0) // entries, page 0 will always be "all-time".
+        return pomodoros
+    }
+    function createTable(tsk, i) {
+        
+        return (<tr> <td> {i} </td> <td>{tsk.title} </td> <td> { computeTime( tsk.minutesWorked )} </td> <td> {computePomodorosCompleted( tsk.minutesWorked )} </td>  </tr> )
+    }
+    let n = props.totalWork.entries.length
+    const [page, setPage] = useState(n) // entries, page 0 will always be "all-time".
     let ret = null// {9/28/2019: tasks[]} or something
-    if (page === 0){
+    if (page === n){
 
-        ret = displayEverything() 
-        // {Object.keys(yourObject).map(function(key) {
-        //     return <div>Key: {key}, Value: {yourObject[key]}</div>;
-        // })}
+        ret = displayEverything()  
 
-        ret = Object.keys(ret).map( (key) =>{
-            return <div> {key}: {ret[key]} </div>
-        } )
+        ret = Object.keys(ret).map( (task, i) =><tr> <td> {i} </td> <td>{task} </td> <td> { computeTime( ret[task] )} </td> <td> {computePomodorosCompleted( ret[task] )} </td>  </tr> )
  
     } else{
-        ret = props.totalWork.entries[page-1] // -1 because we need to display first element
+        ret = props.totalWork.entries[page] 
 
-        ret = ret.tasks.map( task => <div> {task.title} - {task.minutesWorked} </div> )
+        ret = ret.tasks.map( (task, i) => createTable(task, i) )
     }
  
     return (
-        <div>  
+        <div className="Stats" >  
 
-           { page === 0 ? "All Time" : props.totalWork.entries[page-1].entry}
+           {page === n ? "All Time" : props.totalWork.entries[page].entry}
+           <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Task</th>
+            <th>Total Time Worked</th>
+            <th>Pomodoros Completed</th>
+          </tr>
+        </thead>
+        <tbody>
 
             {ret}
+        </tbody>
+      </Table>
+
+      <div className="StatsNav">
+
             current page: {page}
             <Button onClick={() => setPage( Math.max(page-1, 0 ) ) } > Prev </Button>
             <Button onClick={ () => setPage( Math.min( page+1, props.totalWork.entries.length ) ) } > Next </Button>
+      </div>
         </div>
     );
 }

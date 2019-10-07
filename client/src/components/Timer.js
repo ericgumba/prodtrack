@@ -2,6 +2,9 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form' 
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 const Timer = (props) => { 
   const [seconds, setSeconds] = useState(props.timerSecondsLeft)
@@ -99,19 +102,43 @@ const Timer = (props) => {
     props.setTask(value)
   }
 
+  function createCard(){
+    const now = (isWorking ? (props.timerWorkMinutesLeft / props.workDefinition) :( props.timerBreakMinutesLeft / props.breakDefinition)) * 100
+
+    const progressInstance = <ProgressBar now={now} label={`${now}%`} />;
+    
+    return(
+    <Card className="text-center">
+  {/* <Card.Header>Featured</Card.Header> */}
+  <Card.Body>
+    <Card.Title>{props.task}</Card.Title>
+    {progressInstance}
+    <Card.Text>
+      {generateWorkInfo()}
+    </Card.Text>
+    <Button variant="primary" className={`button button-primary button-primary-${isActive ? 'active' : 'inactive'}`} onClick={toggle}>
+          {isActive ? 'Pause' : 'Start'}</Button>
+    <Button variant="primary">Go somewhere</Button>
+  </Card.Body> 
+</Card>)
+  }
+
+  function generateWorkInfo(){
+    return isWorking ? `You are currently working on ${props.task} with ${props. timerWorkMinutesLeft} minutes left and ${seconds} left for current work session` : `You are currently taking a break from, ${props.task} with ${props. timerBreakMinutesLeft} minutes left and ${seconds} left for current break session`
+  }
+
   return (
-    <div className="app">
+    <div className="TimerApp">
       <div className="time">
-        {isWorking ? "Working" + props. timerWorkMinutesLeft + "m" + seconds + "s" : `Breaking ${props.timerBreakMinutesLeft}m${seconds}`} 
+
+
+        {createCard()} 
       </div>
       <div className="row">
-
-        <button className={`button button-primary button-primary-${isActive ? 'active' : 'inactive'}`} onClick={toggle}>
-          {isActive ? 'Pause' : 'Start'}
-        </button> 
+ 
  
       </div> 
-          <h1> Input your task here </h1>
+          Input your task below
         <Form.Control size="lg" type="text" placeholder="Large text" value={task} onChange={(e) => {updateTask(e.target.value)}} /> 
     </div>
   );

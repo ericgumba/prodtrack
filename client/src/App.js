@@ -191,6 +191,7 @@ function App() {
     return (
       <Stats
       totalWork={totalWork}
+      workDefinition={workDefinition}
       >
 
       </Stats>
@@ -363,10 +364,7 @@ function App() {
       setTask('unspecified')   
       nTask='unspecified' 
     }
-
-    // entry is always a thing 
-
-    // case 1: taskEntryDictionary doesn't countain current date e.g 12 AM
+ 
     if (taskEntryDictionary.entry !== now){
       createNewEntry(nTask)
     }
@@ -445,4 +443,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

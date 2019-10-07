@@ -3,7 +3,8 @@ import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button' 
- 
+import '../App.css';
+
 function Settings(props) {
 
   const [workDef, setWorkDef] = useState(0)
@@ -19,6 +20,8 @@ function Settings(props) {
     props.setBreakDefinition(breakDef)
   }
     return ( 
+
+      <div className="Settings">
             <Form>
   <Row>
     <Col>
@@ -32,7 +35,8 @@ function Settings(props) {
   <Button variant="primary" type="submit" onClick={(e) => updateSettings(e)} >
         Save
     </Button>
-</Form> 
+</Form>
+</div> 
     );
 }
 

@@ -20,3 +20,44 @@
 .App-link {
   color: #09d3ac;
 }
+
+.Stats {
+  text-align: center; 
+  display: inline-block;  
+}
+
+.Settings {
+  text-align: center; 
+  display: inline-block; 
+}
+.Register {
+  text-align: center; 
+  display: inline-block; 
+}
+
+.EntryList {
+  text-align: center; 
+  display: inline-block; 
+
+}
+
+
+.TimerApp {
+  text-align: center; 
+  display: inline-block; 
+}
+.Login {
+  text-align: center; 
+  display: inline-block; 
+}
+/* .Settings{
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -50px;
+  width: 300px;
+  height: 100px;
+  background: red;
+} */

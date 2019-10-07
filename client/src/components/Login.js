@@ -15,10 +15,13 @@ function Register(props){
         props.login(username, password) 
     }
 
-    return (<Form>
+    return (
+    <div className="Login">
+
+    <Form>
     <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" onChange={(e) => setUsername(e.target.value)} />
+        <Form.Label>Username</Form.Label>
+        <Form.Control type="email" placeholder="Enter username" onChange={(e) => setUsername(e.target.value)} />
         <Form.Text className="text-muted"> 
         </Form.Text>
     </Form.Group>
@@ -31,7 +34,9 @@ function Register(props){
   <Button variant="primary" type="submit" onClick={(e) => attemptLogin(e)} >
         Login
     </Button>
+    <Button> forgot password </Button>
     </Form>
+    </div>
     )
 }
 
