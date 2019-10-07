@@ -37,7 +37,9 @@ function Stats(props) {
     }
     function createTable(tsk, i) {
         
-        return (<tr> <td> {i} </td> <td>{tsk.title} </td> <td> { computeTime( tsk.minutesWorked )} </td> <td> {computePomodorosCompleted( tsk.minutesWorked )} </td>  </tr> )
+        return (
+        
+        <tr> <td> {i} </td> <td>{tsk.title} </td> <td> { computeTime( tsk.minutesWorked )} </td> <td> {computePomodorosCompleted( tsk.minutesWorked )} </td>  </tr> )
     }
     let n = props.totalWork.entries.length
     const [page, setPage] = useState(n) // entries, page 0 will always be "all-time".
@@ -53,7 +55,34 @@ function Stats(props) {
 
         ret = ret.tasks.map( (task, i) => createTable(task, i) )
     }
- 
+
+    function displayTotalWork(){ 
+    } 
+
+    let tables = props.totalWork.entries.reverse().map( entry => (
+        <div>
+            
+        {entry.entry}
+        <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Task</th>
+            <th>Total Time Worked</th>
+            <th>Pomodoros Completed</th>
+          </tr>
+        </thead>
+        <tbody> 
+
+        {entry.tasks.map( (task, i) => createTable(task,i) )  }
+        </tbody>
+      </Table>
+        </div>
+      
+      ))
+
+
+        
     return (
         <div className="Stats" >  
 
@@ -67,18 +96,14 @@ function Stats(props) {
             <th>Pomodoros Completed</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody> 
 
             {ret}
         </tbody>
       </Table>
 
-      <div className="StatsNav">
 
-            current page: {page}
-            <Button onClick={() => setPage( Math.max(page-1, 0 ) ) } > Prev </Button>
-            <Button onClick={ () => setPage( Math.min( page+1, props.totalWork.entries.length ) ) } > Next </Button>
-      </div>
+      {tables} 
         </div>
     );
 }

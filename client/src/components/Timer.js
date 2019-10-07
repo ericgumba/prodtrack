@@ -124,7 +124,7 @@ const Timer = (props) => {
   }
 
   function generateWorkInfo(){
-    return isWorking ? `You are currently working on ${props.task} with ${props. timerWorkMinutesLeft} minutes left and ${seconds} left for current work session` : `You are currently taking a break from, ${props.task} with ${props. timerBreakMinutesLeft} minutes left and ${seconds} left for current break session`
+    return isWorking ? `You are currently working on ${props.task} with ${props. timerWorkMinutesLeft} minutes left and ${seconds} left for current work session` : `You are currently taking a break from, ${props.task} with ${props. timerBreakMinutesLeft} minutes left and ${seconds} seconds left for current break session`
   }
 
   return (
