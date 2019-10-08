@@ -27,9 +27,7 @@ app.use(express.json());
 app.use( cors() )
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
-
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json({
   type: ['application/json', 'text/plain']
 }))
@@ -52,12 +50,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
-app.listen(process.env.PORT || 3000, function(){
-  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-}); 
 module.exports = app;
