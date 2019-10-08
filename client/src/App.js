@@ -219,6 +219,9 @@ function App() {
         minutesCompleted={minutesCompleted}
         ></Timer>
 
+        <div>
+
+        </div>
         <EntryList
         task={task}
         setEntry={setEntry}
@@ -436,6 +439,8 @@ function App() {
  
   return (
     <div className="App">
+
+
       {header}
     {screenDisplayed} 
  
