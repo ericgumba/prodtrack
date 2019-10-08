@@ -14,7 +14,7 @@ function Navbar(props) {
   let inOrOut = <Nav.Link onClick={ () => {props.setScreen(LOGIN)} }>Login</Nav.Link>
 
   if (props.logout){
-    inOrOut = <Nav.Link onClick={ () => {props.logout() } }>Logout</Nav.Link>
+    inOrOut = <Nav.Link onClick={ () => {props.logout() } }> {props.username} - Logout</Nav.Link>
 
     
   }

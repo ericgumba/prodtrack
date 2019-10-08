@@ -252,6 +252,7 @@ function App() {
             
         setHeader(<Navbar
         setScreen={setScreen}
+        username={username}
         logout={logout}
 
         ></Navbar>) 
