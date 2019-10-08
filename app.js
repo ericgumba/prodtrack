@@ -20,10 +20,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+ 
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -60,7 +57,7 @@ app.use(function(err, req, res, next) {
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
-
-const port = process.env.PORT || 5000;
-app.listen(port);
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+}); 
 module.exports = app;
