@@ -23,16 +23,27 @@ const Timer = (props) => {
   }
 
   // todo: replace with udpate stats instead
+ 
+
+  function endSession(){
+    if( isWorking){
+      props.setTimerBreakMinutesLeft(props.workDefinition)
+
+    } else{
+      props.setTimerBreakMinutesLeft(props.breakDefinition)
+    } 
+    setIsWorking(!isWorking)  
+    props.setTimerIsInWorkMode(!props.timerIsInWorkMode)  
+    tick(0)
+  }
+
+  function skip(){ 
+    endSession()
+  }
   function workCountdown() {
     if (props.timerWorkMinutesLeft <= 0 & seconds <= 0 ){
-
-      console.log("entering break")
-      setIsWorking(false)  
-
-      props.setTimerIsInWorkMode(false) 
-      props.setTimerWorkMinutesLeft(props.workDefinition)  
-      props.setMinutesCompleted(parseInt(props.minutesCompleted)+1) 
-      tick(0)
+      endSession()
+      props.setMinutesCompleted(parseInt(props.minutesCompleted)+1)  
     }
     else if ( seconds <= 0  ){  
       tick(59)
@@ -50,12 +61,8 @@ const Timer = (props) => {
   }
 
   function breakCountdown() {
-      if(props.timerBreakMinutesLeft <= 0 & seconds <= 0){        
-        setIsWorking(true)  
-        props.setTimerIsInWorkMode(true)  
-        props.setTimerBreakMinutesLeft(props.breakDefinition)
-        props.setTimerSecondsLeft(0)
-        setSeconds(0)
+      if(props.timerBreakMinutesLeft <= 0 & seconds <= 0){         
+        endSession()
       }
       else if (seconds <= 0){
         setSeconds(59)
@@ -118,7 +125,7 @@ const Timer = (props) => {
     </Card.Text>
     <Button variant="primary" className={`button button-primary button-primary-${isActive ? 'active' : 'inactive'}`} onClick={toggle}>
           {isActive ? 'Pause' : 'Start'}</Button>
-    <Button variant="primary">Go somewhere</Button>
+    <Button variant="primary" onClick={skip} >Skip</Button>
   </Card.Body> 
 </Card>)
   }
