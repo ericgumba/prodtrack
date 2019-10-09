@@ -30,8 +30,14 @@ const Timer = (props) => {
       props.setTimerWorkMinutesLeft(props.workDefinition)
       props.setWorkSessionsCompleted(parseInt(props.workSessionsCompleted) + 1)
 
+      if ( longBreakReward() ){
+        props.setWorkSessionsCompleted(parseInt(0))
+        console.log("TAKE A VREAK")
+        props.setTimerBreakMinutesLeft(props.longBreakDefinition)
+      }
+
     } else{ 
-      props.setWorkSessionsCompleted(parseInt(0))
+
       props.setTimerBreakMinutesLeft(props.breakDefinition)
     } 
     setIsWorking(!isWorking)  
@@ -115,11 +121,11 @@ const Timer = (props) => {
   }
 
   function progressBarPercentage(){
-    return (isWorking ? (props.timerWorkMinutesLeft / props.workDefinition) :  ( props.timerBreakMinutesLeft / props.breakDefinition)) * 100
+    return (isWorking ? (props.timerWorkMinutesLeft / props.workDefinition) :  props.workSessionsCompleted===0 ? (props.timerBreakMinutesLeft / props.longBreakDefinition ) : ( props.timerBreakMinutesLeft / props.breakDefinition)) * 100
   }
 
   function longBreakReward(){
-    return props.workSessionsCompleted >= props.longBreakPeriods 
+    return props.workSessionsCompleted >= props.longBreakPeriods -1
   }
 
   function createCard(){
