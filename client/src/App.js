@@ -25,9 +25,18 @@ function App() {
     localStorage.getItem('username') || "")
   let [minutesCompleted, setMinutesCompleted] = useState( 0)  
   let [ workDefinition, setWorkDefinition ] = useState(
-    localStorage.getItem('workDefinition') || 1 ) 
+    localStorage.getItem('workDefinition') || 25 ) 
   let [ breakDefinition, setBreakDefinition ] = useState(
-    localStorage.getItem('breakDefinition') || 0)  
+    localStorage.getItem('breakDefinition') || 5)  
+  let [ longBreakDefinition, setLongBreakDefinition ] = useState(
+    localStorage.getItem('longBreakDefinition') || 25) 
+  const [longBreakPeriods, setLongBreakPeriods] = useState(
+    localStorage.getItem('longBreakPeriods') || 4)
+    
+  const [workSessionsCompleted, setWorkSessionsCompleted] = useState(
+   parseInt( localStorage.getItem('workSessionsCompleted')) || 0)
+  
+    
   let [ task, setTask ] = useState(
     localStorage.getItem('task') || "") 
 
@@ -137,8 +146,7 @@ function App() {
   }
 
   function updateUser(){
-
-    console.log("YODATUNG YSERNANE", username)
+ 
     if(username){
       fetch('http://localhost:3000/update', {
         method: 'post',
@@ -146,8 +154,7 @@ function App() {
       })
       .then(response => response.json())
       .then(data =>  {
-
-        console.log("DATAR", data) 
+ 
       }
         )
     }
@@ -169,6 +176,9 @@ function App() {
 // var user = JSON.parse(localStorage.getItem('user')); 
     localStorage.setItem('taskEntryDictionary', JSON.stringify(taskEntryDictionary))
     localStorage.setItem('totalWork', JSON.stringify(totalWork))
+    localStorage.setItem('longBreakDefinition', longBreakDefinition)
+    localStorage.setItem('longBreakPeriods', longBreakPeriods)
+    localStorage.setItem('workSessionsCompleted', parseInt(workSessionsCompleted))
   }
 
   function createSettings(){
@@ -183,6 +193,12 @@ function App() {
         setTimerSecondsLeft={setTimerSecondsLeft}
         setWorkDefinition={setWorkDefinition}
         setBreakDefinition={setBreakDefinition}
+        setLongBreakDefinition={setLongBreakDefinition}
+        setLongBreakPeriods={setLongBreakPeriods}
+        workDefinition={workDefinition}
+        breakDefinition={breakDefinition}
+        longBreakDefinition={longBreakDefinition}
+        longBreakPeriods={longBreakPeriods}
         />
       </>
     )
@@ -217,6 +233,11 @@ function App() {
         task={task}
         setMinutesCompleted={setMinutesCompleted}
         minutesCompleted={minutesCompleted}
+
+        workSessionsCompleted={workSessionsCompleted}
+        setWorkSessionsCompleted={setWorkSessionsCompleted}
+        longBreakDefinition={longBreakDefinition}
+        longBreakPeriods={longBreakPeriods}
         ></Timer>
 
         <div>
@@ -299,7 +320,10 @@ function App() {
     timerIsActive,
     workDefinition,
     breakDefinition,
-    entry
+    longBreakDefinition,
+    longBreakPeriods,
+    entry,
+    workSessionsCompleted
   ] )
 
   useEffect( ()=>{
@@ -325,8 +349,7 @@ function App() {
   function updateTaskEntryDictionary(task){  
 
     let updated = false
-    let updatedTasks = taskEntryDictionary.tasks.map( dicTask =>{
-    console.log("TASK NAME: ") 
+    let updatedTasks = taskEntryDictionary.tasks.map( dicTask =>{ 
  // { entry: String, tasks: [ { title:String, minutesWorked:Number } ] }
     if (dicTask.title === task){ 
       updated = true
@@ -399,9 +422,7 @@ function App() {
        
     })
 
-
-
-    console.log("new workout plan", debuggedEntries)
+ 
 
     totalWork.entries = debuggedEntries
 
@@ -431,11 +452,10 @@ function App() {
       screenToBeDisplayed()
       save()
       updateUser()
-
-      console.log(taskEntryDictionary)
-      console.log(totalWork)
+ 
   }
   }, [minutesCompleted] )
+ 
  
   return (
     <div className="App">

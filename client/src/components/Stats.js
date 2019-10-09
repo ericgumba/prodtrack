@@ -55,14 +55,59 @@ function Stats(props) {
 
         ret = ret.tasks.map( (task, i) => createTable(task, i) )
     }
+    function intValue(entry){
+  
+      let mv = 100
+      let cs = ""
+      let res = 0
+      for (let i = 0; i < entry.length; i++){
+        if (entry[i] === "-"){
+            res += parseInt(cs*mv)
+            cs = ""
+            mv = mv/ 10
+          }
+        else{
+          cs += entry[i]
+          }
+          
+        } 
+        
+        res += parseInt(cs)
+        return res
+    
+    }
 
-    function displayTotalWork(){ 
+    function sortEntries(){
+       let clonedEntries = props.totalWork.entries.slice(0)
+
+       console.log("CE ", clonedEntries)
+
+       let res = []
+       
+       let test = 0
+       while (clonedEntries.length >0){
+         let ma = 0
+         let popIndex = 0
+         for (let i = 0; i < clonedEntries.length; i++){
+           if (intValue(clonedEntries[i].entry) > ma){
+             popIndex = i
+             ma = intValue(clonedEntries[i].entry)
+           }  
+         }
+         res.push(clonedEntries[popIndex])
+         clonedEntries.splice(popIndex,1)  
+     
+       }
+       return res
     } 
 
-    let tables = props.totalWork.entries.reverse().map( entry => (
+    let tables = sortEntries().map( entry => (
         <div>
             
-        {entry.entry}
+         <h1>
+         
+         {entry.entry}
+          </h1> 
         <Table striped bordered hover>
         <thead>
           <tr>
@@ -86,7 +131,10 @@ function Stats(props) {
     return (
         <div className="Stats" >  
 
+        <h1>
+
            {page === n ? "All Time" : props.totalWork.entries[page].entry}
+        </h1>
            <Table striped bordered hover>
         <thead>
           <tr>

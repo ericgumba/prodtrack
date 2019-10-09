@@ -25,11 +25,13 @@ const Timer = (props) => {
   // todo: replace with udpate stats instead
  
 
-  function endSession(){
+  function endSession(){ 
     if( isWorking){
-      props.setTimerBreakMinutesLeft(props.workDefinition)
+      props.setTimerWorkMinutesLeft(props.workDefinition)
+      props.setWorkSessionsCompleted(parseInt(props.workSessionsCompleted) + 1)
 
-    } else{
+    } else{ 
+      props.setWorkSessionsCompleted(parseInt(0))
       props.setTimerBreakMinutesLeft(props.breakDefinition)
     } 
     setIsWorking(!isWorking)  
@@ -39,10 +41,18 @@ const Timer = (props) => {
 
   function skip(){ 
     endSession()
+    
+    if (isActive){
+      toggle()
+    }
+  }
+
+  function incrementWorkSessionsCompleted(){
+    props.setWorkSessionsCompleted(parseInt(props.workSessionsCompleted) + 1)
   }
   function workCountdown() {
     if (props.timerWorkMinutesLeft <= 0 & seconds <= 0 ){
-      endSession()
+      endSession() 
       props.setMinutesCompleted(parseInt(props.minutesCompleted)+1)  
     }
     else if ( seconds <= 0  ){  
@@ -74,23 +84,18 @@ const Timer = (props) => {
         props.setTimerSecondsLeft(props.timerSecondsLeft-1) 
       }
   }
-
-  function print(str){
-    console.log(str)
-  }
+ 
 
   useEffect(() => { 
     let interval = null;
     if (isActive) { 
-      interval = setInterval(() => {
-        print(isWorking)
-
+      interval = setInterval(() => { 
         if (isWorking){ 
             workCountdown()
         } else { 
             breakCountdown()
         }
-      }, 100);
+      }, 10);
     } 
     
     //BUG POSSIBILITY
@@ -109,14 +114,22 @@ const Timer = (props) => {
     props.setTask(value)
   }
 
+  function progressBarPercentage(){
+    return (isWorking ? (props.timerWorkMinutesLeft / props.workDefinition) :  ( props.timerBreakMinutesLeft / props.breakDefinition)) * 100
+  }
+
+  function longBreakReward(){
+    return props.workSessionsCompleted >= props.longBreakPeriods 
+  }
+
   function createCard(){
-    const now = (isWorking ? (props.timerWorkMinutesLeft / props.workDefinition) :( props.timerBreakMinutesLeft / props.breakDefinition)) * 100
+    const now = progressBarPercentage()
 
     const progressInstance = <ProgressBar now={now} label={`${now}%`} />;
     
     return(
     <Card className="text-center">
-  {/* <Card.Header>Featured</Card.Header> */}
+  <Card.Header> {parseInt(props.workSessionsCompleted)} / {props.longBreakPeriods} </Card.Header>
   <Card.Body>
     <Card.Title>{props.task}</Card.Title>
     {progressInstance}
