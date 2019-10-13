@@ -6,11 +6,12 @@ import Button from 'react-bootstrap/Button';
 
 function Register(props){
     const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("") 
     function attemptRegister(e){
         e.preventDefault()
         console.log("USE AND PASS", {username, password})
-        props.register(username, password) 
+        props.register(username, email, password) 
     }
     return (
     
@@ -20,6 +21,12 @@ function Register(props){
     <Form.Group controlId="formBasicEmail">
         <Form.Label>Username</Form.Label>
         <Form.Control type="email" placeholder="Enter username" onChange={(e) => setUsername(e.target.value)}/>
+        <Form.Text className="text-muted"> 
+        </Form.Text>
+    </Form.Group>
+    <Form.Group controlId="formBasicEmail">
+        <Form.Label>Username</Form.Label>
+        <Form.Control type="email" placeholder="Enter Email (OPTIONAL)" onChange={(e) => setEmail(e.target.value)}/>
         <Form.Text className="text-muted"> 
         </Form.Text>
     </Form.Group>

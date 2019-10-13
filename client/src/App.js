@@ -9,6 +9,7 @@ import Login from './components/Login'
 import EntryList from './components/EntryList'
 import Settings from './components/Settings'
 import Stats from './components/Stats'
+import PasswordRecovery from './components/PasswordRecovery'
  
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
   const SETTINGS = "SETTINGS"
   const STATS = "STATS"
   const REGISTER = "REGISTER"
+  const RECOVERY = "RECOVERY"
   const LOGIN = "LOGIN"
 
   // state of app and user's stats
@@ -74,10 +76,10 @@ function App() {
   localStorage.getItem('timerIsActive') || false)
 
 
-  function register(username, password){
+  function register(username, email = "", password){
     fetch("http://localhost:3000/register", {
       method: 'post',
-      body:JSON.stringify( { username: username, password: password, entries: totalWork.entries } )
+      body:JSON.stringify( { username, email, password, entries: totalWork.entries } )
     })
     .then(response => response.json())
     .then(data => {
@@ -131,7 +133,42 @@ function App() {
         save()  
     }
     }
-      )}
+      )
+    }
+
+  }
+
+  function createPasswordRecoveryScreen(){
+
+
+    return(
+      <PasswordRecovery
+        recoverPassword={recoverPassword}
+      >
+
+      </PasswordRecovery>
+    )
+  }
+
+  function recoverPassword(email){
+    console.log("RECOVERING PASSWORD", email)
+
+    fetch('http://localhost:3000/recover', {
+      method: 'post',
+      body: JSON.stringify({email})
+    })
+    .then(response => response.json())
+    .then(data =>  {
+
+      console.log("DATAR", data)
+ 
+    }
+      )
+  }
+
+  function forgotPasswordClicked(){
+
+    setScreen( RECOVERY )
 
   }
 
@@ -262,6 +299,7 @@ function App() {
       return (
         <Login
         login={login}
+        forgotPasswordClicked={forgotPasswordClicked}
         ></Login>
       )
     }
@@ -304,6 +342,9 @@ function App() {
     }
     else if (screen === LOGIN){
       setScreenDisplayed(createLogin())
+    }
+    else if ( screen === RECOVERY ){
+      setScreenDisplayed( createPasswordRecoveryScreen() )
     }
   }
  

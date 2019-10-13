@@ -11,6 +11,8 @@ router.post('/register', user_controller.user_create )
 router.post('/login', user_controller.user_login)
 router.post('/update', user_controller.user_update)
 
+router.post('/recover', user_controller.email_info)
+
 // router.post('/create-entry', user_controller.entry_create)
 
 // router.post('/create-task', user_controller.task_create)

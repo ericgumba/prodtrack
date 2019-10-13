@@ -1,6 +1,7 @@
 var User = require('../models/user') 
 // var Task = require('../models/task')
 // var Entry = require('../models/entry')
+const nodemailer = require('nodemailer');
 // register user
  
 
@@ -56,6 +57,50 @@ var User = require('../models/user')
 //     } )
 // }
 
+exports.email_info = (req, res, next) => {
+    if (req.body.email){
+ 
+        User.findOne({ email: req.body.email }, (err,user) =>{
+
+            console.log("UISER IN EMAIL INFO METHOD", user)
+
+            if (err){
+                console.log("EROR", err)
+                res.send({error: "ERROR"})
+            }
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                user: 'ericgumba@gmail.com',
+                pass: 'er1c092'
+                }
+            });
+            
+            const mailOptions = {
+                from: 'ericgumba@gmail.com',
+                to: req.body.email,
+                subject: 'Sending Email using Node.js',
+                text: `your password for ${user.username}: ${user.password},`
+            };
+
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                console.log(error);
+                res.send({error:"error in sending mail"})
+                } else {
+                console.log('Email sent: ' + info.response);
+                res.send({success: "Success"})
+                }
+            });
+        })
+    }
+    else{
+
+        
+        res.send({error: "no email sent"})
+    }
+}
+
 exports.user_update = ( req, res , next ) => {
     User.findOne( { username: req.body.username }, (err, user) => {
 
@@ -77,6 +122,7 @@ exports.user_create = ( req, res, next ) => {
     let user = new User(
         {
             username: req.body.username,
+            email: req.body.email,
             password: req.body.password,
             entries: req.body.entries
         }

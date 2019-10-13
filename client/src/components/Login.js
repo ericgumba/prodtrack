@@ -34,7 +34,7 @@ function Register(props){
   <Button variant="primary" type="submit" onClick={(e) => attemptLogin(e)} >
         Login
     </Button>
-    <Button> forgot password </Button>
+    <Button onClick={props.forgotPasswordClicked} > forgot password </Button>
     </Form>
     </div>
     )
