@@ -81,6 +81,19 @@ function EntryList(props){
         } 
         </tbody>
       </Table>
+
+
+      <h1>
+          Tutorial
+      </h1>
+    <p>1. This app lets you define your own work flow. A pomodoro is traditionally designed as 25 minutes of work, followed by a 5 minute break. 
+        The settings menu on the top left allows you to customize the length of each work and break period.</p>
+
+    <p>2. This app will also keep a log of how long you've worked on each task and records the total hours, minutes, and pomodoros you've completed, which you can access under the stats menu. </p>
+
+    <p>3. If you have any suggestions on how I can improve this website, please feel free to email me at ericgumba@gmail.com</p>
+ 
+
         </div>
     )
 }

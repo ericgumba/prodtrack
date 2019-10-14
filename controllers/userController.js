@@ -64,10 +64,14 @@ exports.email_info = (req, res, next) => {
 
             console.log("UISER IN EMAIL INFO METHOD", user)
 
+            if (!user){
+                res.send({error: `user not found`})
+            }
+
             if (err){
                 console.log("EROR", err)
                 res.send({error: "ERROR"})
-            }
+            } 
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -102,15 +106,12 @@ exports.email_info = (req, res, next) => {
 }
 
 exports.user_update = ( req, res , next ) => {
-    User.findOne( { username: req.body.username }, (err, user) => {
-
+    User.findOne( { username: req.body.username }, (err, user) => { 
         console.log("Being updated:", user)
-        user.entries = req.body.entries
-
+        user.entries = req.body.entries 
         user.save((err, newUser) => {
             res.send(newUser);
-        })
-        
+        }) 
     } )
 }
 

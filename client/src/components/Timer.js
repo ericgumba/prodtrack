@@ -101,7 +101,7 @@ const Timer = (props) => {
         } else { 
             breakCountdown()
         }
-      }, 10);
+      }, 1000);
     } 
     
     //BUG POSSIBILITY
@@ -166,6 +166,9 @@ const Timer = (props) => {
       </div> 
           Input your task below
         <Form.Control size="lg" type="text" placeholder="Large text" value={task} onChange={(e) => {updateTask(e.target.value)}} /> 
+    
+    
+
     </div>
   );
 };

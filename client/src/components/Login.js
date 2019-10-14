@@ -36,6 +36,8 @@ function Register(props){
     </Button>
     <Button onClick={props.forgotPasswordClicked} > forgot password </Button>
     </Form>
+
+    {props.message}
     </div>
     )
 }

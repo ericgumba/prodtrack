@@ -25,8 +25,8 @@ function Register(props){
         </Form.Text>
     </Form.Group>
     <Form.Group controlId="formBasicEmail">
-        <Form.Label>Username</Form.Label>
-        <Form.Control type="email" placeholder="Enter Email (OPTIONAL)" onChange={(e) => setEmail(e.target.value)}/>
+        <Form.Label>Email (Optional)</Form.Label>
+        <Form.Control type="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)}/>
         <Form.Text className="text-muted"> 
         </Form.Text>
     </Form.Group>

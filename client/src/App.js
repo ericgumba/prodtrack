@@ -120,7 +120,7 @@ function App() {
       console.log("DATAR", data)
 
       if (data.msg){
-        alert("incorrect name")
+        alert("incorrect username and password")
       }else{
         setUsername(data.username)
         totalWork.entries = data.entries 
@@ -504,7 +504,7 @@ function App() {
 
       {header}
     {screenDisplayed} 
- 
+
 
     </div>
   );
